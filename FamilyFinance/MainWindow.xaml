@@ -1,0 +1,70 @@
+﻿<Window x:Class="FamilyFinance.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:localViewModel="clr-namespace:FamilyFinance.ViewModel.MainVM"
+        xmlns:local="clr-namespace:FamilyFinance"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=localViewModel:MainVM}"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+
+        <TabControl TabStripPlacement="Left" Margin="0, 0, 0, 10">
+
+            <TabItem Name="ras" Header="Расходы">
+                <TabItem.Content>
+                    <TextBlock Text="Расходы"/>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem Name="doh" Header="Доходы">
+                <TabItem.Content>
+                    <TextBlock Text="Доходы"/>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem Name="Schet" Header="Счета">
+                <TabItem.Content>
+                    <TextBlock Text="Счета"/>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem Name="Cat" Header="Категории">
+                <TabItem.Content>
+                    <TextBlock Text="Категории"/>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem Name="Otchet" Header="Отчеты">
+                <TabItem.Content>
+                    <TextBlock Text="Отчеты"/>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem Name="Sprav" Header="Справка">
+                <TabItem.Content>
+                    <TextBlock Text="Справка"/>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem Margin="0 20" IsEnabled="False" IsHitTestVisible="False">
+                <TabItem.Header>
+                    <Separator Height="5" Width="100" Background="Red"/>
+                </TabItem.Header>
+            </TabItem>
+
+            <TabItem  Name="Nov" Header="Новости" >
+                <TabItem.Content>
+                    <TextBlock Text="Новости"/>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem  Name="Abo" Header="О проекте" >
+                <TabItem.Content>
+                    <TextBlock Text="О проекте"/>
+                </TabItem.Content>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
