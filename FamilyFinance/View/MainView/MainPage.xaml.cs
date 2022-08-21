@@ -22,6 +22,7 @@ namespace FamilyFinance.View.MainView
     /// </summary>
     public partial class MainPage : Page
     {
+        public User currentUser { get; set; } = DataManager.CurrentUser;
         public MainPage()
         {
             InitializeComponent();
@@ -44,6 +45,44 @@ namespace FamilyFinance.View.MainView
             var res = await ClientManager.ManipulatonData(manipulatonDataMethod);
 
             txBox.Text = text;
+        }
+
+        private async void Button_Click_Admin(object sender, RoutedEventArgs e)
+        {
+            string text = null;
+
+            Func<Client, Task> manipulatonDataMethod = async (client) =>
+            {
+                var result = await client.ApiAccountGetAdminRoleAsync();
+
+                if (!string.IsNullOrEmpty(result.Value))
+                {
+                    text = result.Value;
+                }
+            };
+
+            var res = await ClientManager.ManipulatonData(manipulatonDataMethod);
+
+            txBoxAdminRole.Text = text;
+        }
+
+        private async void Button_Click_User(object sender, RoutedEventArgs e)
+        {
+            string text = null;
+
+            Func<Client, Task> manipulatonDataMethod = async (client) =>
+            {
+                var result = await client.ApiAccountGetUserRoleAsync();
+
+                if (!string.IsNullOrEmpty(result.Value))
+                {
+                    text = result.Value;
+                }
+            };
+
+            var res = await ClientManager.ManipulatonData(manipulatonDataMethod);
+
+            txBoxUserRole.Text = text;
         }
     }
 }

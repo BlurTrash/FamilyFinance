@@ -4,15 +4,38 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FamilyFinance.View.MainView"
+      DataContext="{Binding RelativeSource={RelativeSource Self}}"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPage">
 
     <Grid>
         <StackPanel>
-            <TextBlock Text="Основная программа!"/>
+            <GroupBox>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Ваша роль: "></TextBlock>
+                        <TextBlock Text="{Binding currentUser.RoleId}"></TextBlock>
+                    </StackPanel>
+                    <TextBlock Text="{Binding currentUser.RoleId}"></TextBlock>
+                    <TextBlock Text="{Binding currentUser.Login}"></TextBlock>
+                    <TextBlock Text="{Binding currentUser.FirstName}"></TextBlock>
+                    <TextBlock Text="{Binding currentUser.SecondName}"></TextBlock>
+                    <TextBlock Text="{Binding currentUser.Email}"></TextBlock>
+                </StackPanel>
+            </GroupBox>
+            
+            <TextBlock Margin="0 15 0 0" Text="Основная программа!"/>
             <TextBox x:Name="txBox" Margin="10"/>
-            <Button Content="проверка апи" Click="Button_Click"/>
+            <Button Content="проверка апи авторизации" Click="Button_Click"/>
+
+            <TextBlock Margin="0 15 0 0" Text="Admin role test!"/>
+            <TextBox x:Name="txBoxAdminRole" Margin="10"/>
+            <Button Content="проверка апи роли Admina" Click="Button_Click_Admin"/>
+
+            <TextBlock Margin="0 15 0 0" Text="User role test!"/>
+            <TextBox x:Name="txBoxUserRole" Margin="10"/>
+            <Button Content="проверка апи роли User" Click="Button_Click_User"/>
         </StackPanel>
     </Grid>
 </Page>

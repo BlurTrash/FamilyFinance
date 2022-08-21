@@ -5,16 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:localViewModel="clr-namespace:FamilyFinance.ViewModel.MainVM"
         xmlns:local="clr-namespace:FamilyFinance"
+        xmlns:views="clr-namespace:FamilyFinance.View.MainView"
+        xmlns:controls="clr-namespace:FamilyFinance.Shared.Controls"
+        xmlns:validation="clr-namespace:FamilyFinance.Shared.ValidationRules"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=localViewModel:MainVM}"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="500" Width="700">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/FamilyFinance;component/FFResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
 
-        <TabControl TabStripPlacement="Left" Margin="0, 0, 0, 10">
+        <TabControl TabStripPlacement="Left" Style="{StaticResource FFTabControl}">
 
-            <TabItem Name="ras" Header="Расходы">
+            <TabItem Name="Epenses" Header="Расходы">
                 <TabItem.Content>
-                    <TextBlock Text="Расходы"/>
+                    <views:Expenses Margin="10"/>
                 </TabItem.Content>
             </TabItem>
 
