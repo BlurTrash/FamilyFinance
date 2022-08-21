@@ -68,8 +68,15 @@ namespace WebApi.Controllers
             try
             {
                 user.Password = AuthUtils.GetHash(password);
+
+                var userRole = db.Roles.FirstOrDefault(r => r.Name == "user");
+
+                if (userRole != null)
+                    user.Role = userRole;
+
                 db.Users.Add(user);
                 db.SaveChanges();
+
                 return Get(user.Id);
             }
             catch (Exception ex)
@@ -143,9 +150,9 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public ActionResult<SimpleType<string>> GetToken(string login, string password)
+        public async Task<ActionResult<SimpleType<string>>> GetToken(string login, string password)
         {
-            var token = AuthUtils.GetClaimsIdentity(db, login, password);
+            var token = await AuthUtils.GetClaimsIdentity(db, HttpContext, login, password);
             if (token != null)
             {
                 return this.OkSimpleType(token);
@@ -174,6 +181,7 @@ namespace WebApi.Controllers
             return Get(user.Id);
         }
 
+        //Тест методов api для авторизации и ролей
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -181,7 +189,23 @@ namespace WebApi.Controllers
         public ActionResult<SimpleType<string>> GetText()
         {
            
-            return this.OkSimpleType("Hello world!");
+            return this.OkSimpleType("Для авторизированного пользователя!");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "admin")]
+        public ActionResult<SimpleType<string>> GetAdminRole()
+        {
+            return this.OkSimpleType("Ваша роль: администратор!");
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "user")]
+        public ActionResult<SimpleType<string>> GetUserRole()
+        {
+            return this.OkSimpleType("Ваша роль: всего лишь пользователь!");
         }
     }
 }

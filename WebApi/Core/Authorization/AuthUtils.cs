@@ -1,4 +1,8 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -38,11 +42,11 @@ namespace WebApi.Core.Authorization
         /// <summary>
         /// Возвращает jwt token и создает claims для текущего пользлвателя 
         /// </summary>
-        public static string GetClaimsIdentity(ApplicationContext db, string login, string password)
+        public async static Task<string> GetClaimsIdentity(ApplicationContext db, HttpContext httpContext, string login, string password)
         {
             var passwordHash = GetHash(password);
 
-            var user = db.Users.FirstOrDefault(u => u.Login == login && u.Password == passwordHash);
+            var user = db.Users.Include(u => u.Role).FirstOrDefault(u => u.Login == login && u.Password == passwordHash);
 
             if (user == null) return null;
 
@@ -51,6 +55,8 @@ namespace WebApi.Core.Authorization
 
             // Добавляем к утверждениям логин пользователя
             claims.Add(new Claim(type: ClaimsIdentity.DefaultNameClaimType, user.Login));
+            // добавляем к утверждения роль пользователя
+            claims.Add(new Claim(type: ClaimsIdentity.DefaultRoleClaimType, user.Role?.Name));
 
             var options = new JsonSerializerOptions()
             {
