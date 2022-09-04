@@ -1,0 +1,64 @@
+﻿<Window x:Class="FamilyFinance.View.MainView.CategoryDialogWindows.CategoryExpenseWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FamilyFinance.View.MainView.CategoryDialogWindows"
+        xmlns:controls="clr-namespace:FamilyFinance.Shared.Controls"
+        xmlns:validation="clr-namespace:FamilyFinance.Shared.ValidationRules"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        mc:Ignorable="d"
+        Title="Категория расхода" Height="400" Width="550" FontSize="14" SizeToContent="Height" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/FamilyFinance;component/FFResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="auto"/>
+
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="130"/>
+            <RowDefinition Height="auto"/>
+
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Наименование" Grid.Row="0" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+        <controls:WatermarkTextBox Grid.Row="1" x:Name="txBoxName" Margin="0 0 0 10"
+                                   Watermark="Введите значение" TextChanged="TextBox_TextChanged"
+                                   VerticalContentAlignment="Top" TextWrapping="Wrap" AcceptsReturn="True"
+                                   Validation.ErrorTemplate="{StaticResource FFValidationFailed}"
+                                   Style="{StaticResource FFWatermarkTextBox}">
+            <controls:WatermarkTextBox.Text>
+                <Binding Path="TempCategoryExpense.Name" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <validation:EmptyValidationRule ValidatesOnTargetUpdated="True" ErrorMessage="Обязательное поле"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </controls:WatermarkTextBox.Text>
+        </controls:WatermarkTextBox>
+        <Separator Grid.Row="2" Style="{StaticResource FFSeparator}"/>
+
+        <TextBlock Grid.Row="3" Text="Описание" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+        <TextBox x:Name="txBoxDescription" Margin="0 0 0 10" Grid.Row="4" Text="{Binding TempCategoryExpense.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TextBox_TextChanged" Style="{StaticResource FFTextArea}"></TextBox>
+        <Separator Grid.Row="5" Style="{StaticResource FFSeparator}"/>
+
+        <Grid Grid.Row="6" Margin="0 10 0 0" Grid.IsSharedSizeScope="True" VerticalAlignment="Bottom">
+            <Grid HorizontalAlignment="Right">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="A"/>
+                    <ColumnDefinition SharedSizeGroup="A"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="BtnSave" Grid.Column="0" Margin="0 0 10 0" Content="Сохранить" Command="{Binding SaveCategoryCommand}" Style="{StaticResource FFButton}"/>
+                <Button x:Name="BtnCancel" Grid.Column="1" Margin="10 0 0 0" Command="{Binding CancelCategoryCommand}" Style="{StaticResource FFButtonCancel}" Content="Отмена"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
