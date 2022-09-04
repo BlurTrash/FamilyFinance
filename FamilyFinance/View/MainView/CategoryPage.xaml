@@ -1,0 +1,344 @@
+﻿<UserControl x:Class="FamilyFinance.View.MainView.CategoryPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FamilyFinance.View.MainView"
+             xmlns:controls="clr-namespace:FamilyFinance.Shared.Controls"
+             xmlns:validation="clr-namespace:FamilyFinance.Shared.ValidationRules"
+             xmlns:localViewModel="clr-namespace:FamilyFinance.ViewModel.MainVM"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             d:DataContext="{d:DesignInstance Type=localViewModel:CategoryVM}"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1100" FontSize="14" x:Name="CategoryControl">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/FamilyFinance;component/FFResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Border Background="White" CornerRadius="5" BorderThickness="1" BorderBrush="{StaticResource BorderBrush}">
+            <Grid>
+                <TabControl Style="{StaticResource FFTabControl}" Background="White">
+                    <TabItem Header="Доходы">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Margin="10" Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" BorderThickness="1" CornerRadius="4 4 0 0" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource HeaderBrush}">
+                                    <Grid Margin="0 0 22 0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Text="Категории доходов" Grid.Column="0" VerticalAlignment="Center" Margin="20 0" Style="{StaticResource FFTextBlockTitle}"/>
+
+                                        <controls:FFButton Grid.Column="2" Content="Добавить" Height="34" Margin="10" Command="{Binding AddCategoryCommand}"/>
+                                    </Grid>
+                                </Border>
+
+                                <Border Grid.Row="1" Background="{StaticResource ControlBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1 0 1 1" CornerRadius="0 0 4 4">
+                                    <ListBox FontSize="16" Foreground="{StaticResource TextBrush}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding IncomeCategories}" Style="{StaticResource FFList}">
+                                        <ListBox.Template>
+                                            <ControlTemplate TargetType="ListBox">
+                                                <ScrollViewer MaxWidth="{Binding RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Path=ActualWidth}">
+                                                    <ItemsPresenter/>
+                                                </ScrollViewer>
+                                            </ControlTemplate>
+                                        </ListBox.Template>
+
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="SelectionChanged">
+                                                <i:InvokeCommandAction Command="{Binding SelectCategoryCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedItem}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="10" Background="Transparent">
+                                                    <Grid.InputBindings>
+                                                        <MouseBinding MouseAction="LeftDoubleClick"  
+                                                      Command="{Binding ElementName=CategoryControl, Path=DataContext.EditCategoryCommand}"
+                                                      CommandParameter="{Binding}"/>
+                                                    </Grid.InputBindings>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid Grid.ColumnSpan="2" Margin="0 0 20 0">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="*"/>
+                                                            <RowDefinition Height="auto"/>
+                                                        </Grid.RowDefinitions>
+                                                        <TextBlock Text="{Binding Path=Name}"  ToolTip="{Binding Name}" Grid.Row="0" MaxHeight="25" TextTrimming="CharacterEllipsis" FontSize="16" FontWeight="Normal"/>
+                                                        <TextBlock Text="{Binding Path=Description}" ToolTip="{Binding Description}" Grid.Row="1" MaxHeight="25" TextTrimming="CharacterEllipsis" FontSize="14" FontWeight="Normal">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Style.Triggers>
+                                                                        <Trigger Property="Text" Value="">
+                                                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                                                        </Trigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                    </Grid>
+
+                                                    <Grid Grid.Column="3" Grid.IsSharedSizeScope="True" Grid.RowSpan="2">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition SharedSizeGroup="A"/>
+                                                            <ColumnDefinition Width="10"/>
+                                                            <ColumnDefinition SharedSizeGroup="A"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Button x:Name="BtnEdit" Grid.Column="0" Height="25" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                                                                Content="{StaticResource Edit}" 
+                                                                Command="{Binding ElementName=CategoryControl, Path=DataContext.EditCategoryCommand}" 
+                                                                CommandParameter="{Binding}"
+                                                                Style="{StaticResource FFButtonEllipse}"/>
+
+                                                        <Button x:Name="BtnDelete" Grid.Column="2" Height="25" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                                                                Content="{StaticResource Delete}"    
+                                                                Command="{Binding ElementName=CategoryControl, Path=DataContext.DeleteCategoryCommand}" 
+                                                                CommandParameter="{Binding}"
+                                                                Style="{StaticResource FFButtonEllipse}">
+                                                        </Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Border>
+                            </Grid>
+
+                            <Grid Margin="10" Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Border Grid.Row="0" BorderThickness="1" CornerRadius="4" Visibility="{Binding SubCategoryInfoVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource HeaderBrush}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+
+                                        <Grid Grid.Row="0" Margin="0 5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Категория:" Grid.Column="0" VerticalAlignment="Center" Margin="10 0" Style="{StaticResource FFTextBlockTitle}"/>
+                                            <TextBlock Text="{Binding SelectionCategoryName}" Grid.Column="1" VerticalAlignment="Center" Margin="10 0" Style="{StaticResource FFTextBlock}"/>
+                                        </Grid>
+
+                                        <Grid Grid.Row="1" Margin="0 5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Описание:" Grid.Column="0" VerticalAlignment="Center" Margin="10 0" Style="{StaticResource FFTextBlockTitle}"/>
+                                            <TextBlock Text="{Binding SelectionCategoryDescription}" Grid.Column="1" VerticalAlignment="Center" Margin="10 0" Style="{StaticResource FFTextBlock}"/>
+                                        </Grid>
+
+                                        <Grid Grid.Row="2" Margin="0 5" Height="115">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Подкатегории:" Grid.Column="0" VerticalAlignment="Top" Margin="10 0" Style="{StaticResource FFTextBlockTitle}"/>
+                                            <controls:ChipsPanel Margin="5" Grid.Column="1"  IsEditable="False" ItemsSource="{Binding IncomeSubCategories}" DeleteCommand="{Binding DeleteSubCategoryCommand}" DisplayMemberPath="Name" Style="{StaticResource FFChipsPanel}"/>
+                                        </Grid>
+
+                                        <Grid Grid.Row="3" Margin="0 5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <controls:WatermarkTextBox Grid.Column="0" Watermark="Введите подкатегорию" Height="34" Margin="10 0 0 0" Text="{Binding SubCategoryName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FFWatermarkTextBox}"/>
+                                            <controls:FFButton Grid.Column="1" Icon="None" Content="Добавить" Height="34" Margin="10" Command="{Binding AddSubCategoryCommand}"/>
+                                        </Grid>
+                                    </Grid>
+                                    
+                                </Border>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+
+                    <TabItem Header="Расходы" Background="White">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Margin="10" Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" BorderThickness="1" CornerRadius="4 4 0 0" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource HeaderBrush}">
+                                    <Grid Margin="0 0 22 0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Text="Категории расходов" Grid.Column="0" VerticalAlignment="Center" Margin="20 0" Style="{StaticResource FFTextBlockTitle}"/>
+
+                                        <controls:FFButton Grid.Column="2" Content="Добавить" Height="34" Margin="10" Command="{Binding AddCategoryExpensesCommand}"/>
+                                    </Grid>
+                                </Border>
+
+                                <Border Grid.Row="1" Background="{StaticResource ControlBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1 0 1 1" CornerRadius="0 0 4 4">
+                                    <ListBox FontSize="16" Foreground="{StaticResource TextBrush}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding ExpensesCategories}" Style="{StaticResource FFList}">
+                                        <ListBox.Template>
+                                            <ControlTemplate TargetType="ListBox">
+                                                <ScrollViewer MaxWidth="{Binding RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Path=ActualWidth}">
+                                                    <ItemsPresenter/>
+                                                </ScrollViewer>
+                                            </ControlTemplate>
+                                        </ListBox.Template>
+
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="SelectionChanged">
+                                                <i:InvokeCommandAction Command="{Binding SelectCategoryExpenseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedItem}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="10" Background="Transparent">
+                                                    <Grid.InputBindings>
+                                                        <MouseBinding MouseAction="LeftDoubleClick"  
+                                                                      Command="{Binding ElementName=CategoryControl, Path=DataContext.EditCategoryExpensesCommand}"
+                                                                      CommandParameter="{Binding}"/>
+                                                    </Grid.InputBindings>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid Grid.ColumnSpan="2" Margin="0 0 20 0">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="*"/>
+                                                            <RowDefinition Height="auto"/>
+                                                        </Grid.RowDefinitions>
+                                                        <TextBlock Text="{Binding Path=Name}"  ToolTip="{Binding Name}" Grid.Row="0" MaxHeight="25" TextTrimming="CharacterEllipsis" FontSize="16" FontWeight="Normal"/>
+                                                        <TextBlock Text="{Binding Path=Description}" ToolTip="{Binding Description}" Grid.Row="1" MaxHeight="25" TextTrimming="CharacterEllipsis" FontSize="14" FontWeight="Normal">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Style.Triggers>
+                                                                        <Trigger Property="Text" Value="">
+                                                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                                                        </Trigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                    </Grid>
+
+                                                    <Grid Grid.Column="3" Grid.IsSharedSizeScope="True" Grid.RowSpan="2">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition SharedSizeGroup="A"/>
+                                                            <ColumnDefinition Width="10"/>
+                                                            <ColumnDefinition SharedSizeGroup="A"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Button x:Name="BtnEdit" Grid.Column="0" Height="25" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                                                                Content="{StaticResource Edit}" 
+                                                                Command="{Binding ElementName=CategoryControl, Path=DataContext.EditCategoryExpensesCommand}" 
+                                                                CommandParameter="{Binding}"
+                                                                Style="{StaticResource FFButtonEllipse}"/>
+
+                                                        <Button x:Name="BtnDelete" Grid.Column="2" Height="25" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                                                                Content="{StaticResource Delete}"    
+                                                                Command="{Binding ElementName=CategoryControl, Path=DataContext.DeleteCategoryExpensesCommand}" 
+                                                                CommandParameter="{Binding}"
+                                                                Style="{StaticResource FFButtonEllipse}">
+                                                        </Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Border>
+                            </Grid>
+
+                            <Grid Margin="10" Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Border Grid.Row="0" BorderThickness="1" CornerRadius="4" Visibility="{Binding SubCategoryExpenseInfoVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource HeaderBrush}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+
+                                        <Grid Grid.Row="0" Margin="0 5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Категория:" Grid.Column="0" VerticalAlignment="Center" Margin="10 0" Style="{StaticResource FFTextBlockTitle}"/>
+                                            <TextBlock Text="{Binding SelectionCategoryExpenseName}" Grid.Column="1" VerticalAlignment="Center" Margin="10 0" Style="{StaticResource FFTextBlock}"/>
+                                        </Grid>
+
+                                        <Grid Grid.Row="1" Margin="0 5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Описание:" Grid.Column="0" VerticalAlignment="Center" Margin="10 0" Style="{StaticResource FFTextBlockTitle}"/>
+                                            <TextBlock Text="{Binding SelectionCategoryExpenseDescription}" Grid.Column="1" VerticalAlignment="Center" Margin="10 0" Style="{StaticResource FFTextBlock}"/>
+                                        </Grid>
+
+                                        <Grid Grid.Row="2" Margin="0 5" Height="115">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Подкатегории:" Grid.Column="0" VerticalAlignment="Top" Margin="10 0" Style="{StaticResource FFTextBlockTitle}"/>
+                                            <controls:ChipsPanel Margin="5" Grid.Column="1"  IsEditable="False" ItemsSource="{Binding SubCategoriesExpense}" DeleteCommand="{Binding DeleteSubCategoryExpenseCommand}" DisplayMemberPath="Name" Style="{StaticResource FFChipsPanel}"/>
+                                        </Grid>
+
+                                        <Grid Grid.Row="3" Margin="0 5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <controls:WatermarkTextBox Grid.Column="0" Watermark="Введите подкатегорию" Height="34" Margin="10 0 0 0" Text="{Binding SubCategoryExpenseName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FFWatermarkTextBox}"/>
+                                            <controls:FFButton Grid.Column="1" Icon="None" Content="Добавить" Height="34" Margin="10" Command="{Binding AddSubCategoryExpenseCommand}"/>
+                                        </Grid>
+                                    </Grid>
+
+                                </Border>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

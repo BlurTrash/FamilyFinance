@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FamilyFinance.ViewModel.MainVM;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,11 +19,12 @@ namespace FamilyFinance.View.MainView
     /// <summary>
     /// Логика взаимодействия для Expenses.xaml
     /// </summary>
-    public partial class Expenses : UserControl
+    public partial class ExpensesPage : UserControl
     {
-        public Expenses()
+        public ExpensesPage()
         {
             InitializeComponent();
+            DataContext = new ExpensesVM();
         }
     }
 }
