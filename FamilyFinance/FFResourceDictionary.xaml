@@ -249,6 +249,51 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="FFButtonCancel" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ButtonBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{StaticResource ButtonBrush}"/>
+        <Setter Property="MinHeight" Value="33"/>
+        <Setter Property="Padding" Value="10 5"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <ControlTemplate.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="4"/>
+                        </Style>
+                    </ControlTemplate.Resources>
+                    <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                        <ContentPresenter Margin="{TemplateBinding Padding}"
+                                                                   HorizontalAlignment="Center"
+                                                                   VerticalAlignment="Center"
+                                                                   RecognizesAccessKey="True"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5"></Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#f7faff"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#e0ebfe"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.6"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
     <ControlTemplate x:Key="FFButtonTemplate" TargetType="{x:Type controls:FFButton}">
         <Border Background="{TemplateBinding Background}"
                 BorderBrush="{TemplateBinding BorderBrush}"
@@ -259,6 +304,8 @@
             <!--Второй Border для исправления визуального бага-->
             <Border Margin="-1" 
                     Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
                     CornerRadius="{TemplateBinding CornerRadius}">
                 <Grid Margin="{TemplateBinding Padding}">
                     <Grid.ColumnDefinitions>
@@ -270,11 +317,13 @@
                     <controls:FFIcon x:Name="Icon" Width="{TemplateBinding IconSize}" Height="{TemplateBinding IconSize}" Grid.Column="0"
                                       Icon="{TemplateBinding Icon}" 
                                       Color="{TemplateBinding Foreground}"
-                                      HorizontalAlignment="Center"/>
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
 
                     <ContentPresenter x:Name="ContentPresenter" Grid.Column="2"
                                       Content="{TemplateBinding Content}"
-                                      VerticalAlignment="Center"/>
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
 
                 </Grid>
             </Border>
@@ -285,17 +334,23 @@
                 <Setter TargetName="Icon" Property="Grid.ColumnSpan" Value="3"/>
                 <Setter TargetName="Spacing" Property="Width" Value="0"/>
             </Trigger>
+            <Trigger Property="Icon" Value="None">
+                <Setter TargetName="Icon" Property="Visibility" Value="Collapsed"/>
+                <Setter TargetName="ContentPresenter" Property="Grid.ColumnSpan" Value="3"/>
+                <Setter TargetName="Spacing" Property="Width" Value="0"/>
+            </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <Style TargetType="{x:Type controls:FFButton}">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="Icon" Value="Plus"/>
         <Setter Property="Padding" Value="14, 8"/>
         <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
         <Setter Property="BorderThickness" Value="1,1,1,1"/>
         <Setter Property="CornerRadius" Value="5"/>
-        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontSize" Value="14"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Foreground" Value="{StaticResource SurfaceBrush}"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -306,6 +361,9 @@
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="Background" Value="#1D4ED8"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.6"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -1256,7 +1314,158 @@
         </Style.Resources>
     </Style>
     <!--#endregion-->
-    
+
+    <!--#region FFChips -->
+    <Style x:Key="FFChipButton" TargetType="Button">
+        <Setter Property="BorderBrush" Value="{StaticResource HighLightTextBrush}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Ellipse Name="ellipseBorder" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Fill="{TemplateBinding Background}" StrokeThickness="0.7" Stroke="{TemplateBinding BorderBrush}"/>
+                        <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Cursor" Value="Hand"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="FFChipItemStyle" TargetType="{x:Type controls:ChipsItem}">
+        <Setter Property="MaxWidth" Value="100"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Foreground" Value="{StaticResource HighLightTextBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ChipsItem}">
+                    <ControlTemplate.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </ControlTemplate.Resources>
+                    <Border x:Name="itemBorder" Background="{StaticResource HighLightBrush}" Grid.ColumnSpan="2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                                        ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                        ContentStringFormat="{TemplateBinding ContentTemplateSelector}"                                        
+                                         
+                                        VerticalAlignment="Center"
+                                        Margin="8 4 12 4"
+                                        Grid.Column="0">
+                                <ContentPresenter.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextTrimming" Value="CharacterEllipsis"></Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="extensions:TextBlockService.IsTextTrimmed" Value="True">
+                                                <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+
+                            <Button Grid.Column="1"
+                                x:Name="PART_Button"
+                                Margin="-6 4 6 4"
+                                FontSize="8"
+                                VerticalContentAlignment="Center"
+                                HorizontalContentAlignment="Center"
+                                Width="16" Height="16"
+                                Style="{StaticResource FFChipButton}">
+                                <Button.Content>
+                                    <Path Margin="4"
+                                          Data="M0,0 L10,10 M0,10 L10,0"
+                                          Stroke="{TemplateBinding Foreground}" 
+                                          StrokeThickness="1" 
+                                          HorizontalAlignment="Center" 
+                                          VerticalAlignment="Center"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="itemBorder" Property="Background" Value="{StaticResource HighLightBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="FFChipsPanel" TargetType="{x:Type controls:ChipsPanel}">
+        <Setter Property="Focusable" Value="True"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource FFChipItemStyle}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="MinHeight" Value="78"/>
+        <Setter Property="MaxHeight" Value="115"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ChipsPanel}">
+                    <ControlTemplate.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </ControlTemplate.Resources>
+                    <Grid>
+                        <Border Name="borderOwner" BorderThickness="4" Opacity="0.4" Visibility="{TemplateBinding BorderOwnerVisibility}" CornerRadius="5" BorderBrush="{StaticResource HoverBorderBrush}" Margin="-3"/>
+                        <Border Name="border" Background="White" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
+                            <ScrollViewer x:Name="ChipsScroll" CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <ItemsPresenter x:Name="PART_ItemsPresenter" Grid.Row="0" Margin="0 0 4 0" SnapsToDevicePixels="True" ScrollViewer.CanContentScroll="True"/>
+                                    <controls:WatermarkTextBox x:Name="PART_TextBox" IsEnabled="{TemplateBinding IsEditable}" Watermark="{TemplateBinding WatermarkText}" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Text, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="5" MinWidth="100" BorderBrush="Transparent" BorderThickness="0" ScrollViewer.CanContentScroll="True">
+                                    </controls:WatermarkTextBox>
+                                </Grid>
+                            </ScrollViewer>
+                        </Border>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="#3B82F6"/>
+                        </Trigger>
+
+                        <Trigger SourceName="PART_TextBox" Property="IsFocused" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="#3B82F6"/>
+                            <Setter TargetName="borderOwner" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+
+                        <Trigger SourceName="PART_TextBox" Property="IsEnabled" Value="False">
+                            <Setter TargetName="PART_TextBox" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <Setter.Value >
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal">
+                    </WrapPanel>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion-->
+
     <!--#region FFComboBox -->
     <Style x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
         <Setter Property="Background" Value="Transparent"/>

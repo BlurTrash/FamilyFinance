@@ -8,23 +8,30 @@
         xmlns:views="clr-namespace:FamilyFinance.View.MainView"
         xmlns:controls="clr-namespace:FamilyFinance.Shared.Controls"
         xmlns:validation="clr-namespace:FamilyFinance.Shared.ValidationRules"
-        mc:Ignorable="d"
+        xmlns:converters="clr-namespace:FamilyFinance.Core.Converters"
         d:DataContext="{d:DesignInstance Type=localViewModel:MainVM}"
-        Title="MainWindow" Height="500" Width="700">
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="1100">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/FamilyFinance;component/FFResourceDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <converters:AuthEnabledConverter x:Key="AuthEnabledConverter"/>
+            <converters:AuthVisibilityConverter x:Key="AuthVisibilityConverter"/>
+            <converters:NonAuthEnabledConverter x:Key="NonAuthEnabledConverter"/>
+            <converters:NonAuthVisibilityConverter x:Key="NonAuthVisibilityConverter"/>
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-
         <TabControl TabStripPlacement="Left" Style="{StaticResource FFTabControl}">
 
-            <TabItem Name="Epenses" Header="Расходы">
+            <TabItem Name="Expenses" Header="Расходы">
                 <TabItem.Content>
-                    <views:Expenses Margin="10"/>
+                    <Grid>
+                        <views:NonAuth Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource NonAuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource NonAuthVisibilityConverter}, Mode=OneWay}"/>
+                        <views:ExpensesPage Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource AuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource AuthVisibilityConverter}, Mode=OneWay}"/>
+                    </Grid>
                 </TabItem.Content>
             </TabItem>
 
@@ -42,7 +49,10 @@
 
             <TabItem Name="Cat" Header="Категории">
                 <TabItem.Content>
-                    <TextBlock Text="Категории"/>
+                    <Grid>
+                        <views:NonAuth Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource NonAuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource NonAuthVisibilityConverter}, Mode=OneWay}"/>
+                        <views:CategoryPage Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource AuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource AuthVisibilityConverter}, Mode=OneWay}"/>
+                    </Grid>
                 </TabItem.Content>
             </TabItem>
 

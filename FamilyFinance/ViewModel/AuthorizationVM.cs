@@ -153,16 +153,25 @@ namespace FamilyFinance.ViewModel
                 {
                     Func<Client, Task> manipulatonDataMethod1 = async (client) =>
                     {
-                        // Если token получен, получаем информацию о откущем пользователе
+                        // Если token получен, получаем информацию о откущем пользователе и загружаем данные в программу
                         var currentUser = await client.ApiAccountGetCurrentUserAsync();
                         DataManager.CurrentUser = currentUser;
+                        DataManager.UserRole = (Role)currentUser.RoleId;
+                        // Обновляем данные в программе
+                        await DataManager.UpdateFromServer();
                     };
 
                     await ClientManager.ManipulatonData(manipulatonDataMethod1);
 
                     MessageBox.Show($"Вход выполнен!");
 
-                    _navPage.NavigationService.Navigate(new MainPage());
+                    //_navPage.NavigationService.Navigate(new MainPage()); //test
+
+                    MainWindow mainWindow = new MainWindow();
+                    mainWindow.Show();
+
+                    var currentWindow = Application.Current.MainWindow;
+                    currentWindow.Close();
                 }
             }
             catch (Exception ex)

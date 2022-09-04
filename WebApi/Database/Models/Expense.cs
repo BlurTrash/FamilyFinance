@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace WebApi.Database.Models
@@ -15,22 +16,25 @@ namespace WebApi.Database.Models
         /// Пользователь которому принадлежит расход
         /// </summary>
         public int UserId { get; set; }
-        public User? User { get; set; }
-        ///// <summary>
-        ///// Катерия расхода
-        ///// </summary>
-        //public int CategoryId { get; set; }
-        //public Category Category { get; set; }
-        ///// <summary>
-        ///// Подкатегория расхода
-        ///// </summary>
-        //public int? SubCategoryId { get; set; }
-        //public SubCategory? SubCategory { get; set; }
-        ///// <summary>
-        ///// Счет списания расхода
-        ///// </summary>
-        //public int CheckId { get; set; }
-        //public Check Check { get; set; }
+        [JsonIgnore]
+        public User User { get; set; }
+        /// <summary>
+        /// Катерия расхода
+        /// </summary>
+        public int? CategoryId { get; set; }
+        [JsonIgnore]
+        public Category? Category { get; set; }
+        /// <summary>
+        /// Подкатегория расхода
+        /// </summary>
+        public int? SubCategoryId { get; set; }
+        [JsonIgnore]
+        public SubCategory? SubCategory { get; set; }
+        /// <summary>
+        /// Счет списания расхода
+        /// </summary>
+        public int? CheckId { get; set; }
+        public Check? Check { get; set; }
         /// <summary>
         /// Дата расхода
         /// </summary>

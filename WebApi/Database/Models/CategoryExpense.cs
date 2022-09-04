@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace WebApi.Database.Models
 {
-    //Таблица категорий доходов
-    public class Category : BaseEntity
+    //Таблица категорий расходов
+    public class CategoryExpense : BaseEntity
     {
         public int UserId { get; set; }
         [JsonIgnore]

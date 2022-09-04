@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 
 namespace WebApi.Database.Models
 {
-    //Таблица категорий доходов
-    public class Category : BaseEntity
+    //Таблица подкатегорий расходов
+    public class SubCategoryExpense : BaseEntity
     {
-        public int UserId { get; set; }
-        [JsonIgnore]
-        public User User { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
-        //public List<User> Users { get; set; } = new List<User>();
-        //public List<SubCategory> SubCategories { get; set; } = new List<SubCategory>();
+        public int CategoryExpenseId { get; set; }
+        [JsonIgnore]
+        public CategoryExpense CategoryExpense { get; set; }
         //public List<Expense> Expenses { get; set; } = new List<Expense>();
     }
 }

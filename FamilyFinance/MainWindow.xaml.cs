@@ -1,4 +1,5 @@
 ﻿using FamilyFinance.Model;
+using FamilyFinance.ViewModel.MainVM;
 using FamilyFinance.WebApi.Service;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace FamilyFinance
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainVM();
         }
 
       
