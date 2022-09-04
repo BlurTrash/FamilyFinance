@@ -75,7 +75,7 @@ namespace FamilyFinance.Shared.Controls
         {
         }
 
-       
+
         #endregion
 
         #region OnApplyTemplate
@@ -150,12 +150,71 @@ namespace FamilyFinance.Shared.Controls
     [StyleTypedProperty(Property = "ItemContainerStyle", StyleTargetType = typeof(ChipsItem))]
     public class ChipsPanel : ItemsControl
     {
+        public static readonly RoutedEvent TextChangedEvent = EventManager.RegisterRoutedEvent(
+        name: "TextChanged",
+        routingStrategy: RoutingStrategy.Bubble,
+        handlerType: typeof(RoutedEventHandler),
+        ownerType: typeof(ChipsPanel));
+
+        // Provide CLR accessors for assigning an event handler.
+        public event RoutedEventHandler TextChanged
+        {
+            add { AddHandler(TextChangedEvent, value); }
+            remove { RemoveHandler(TextChangedEvent, value); }
+        }
+
+        void RaiseCustomRoutedEvent()
+        {
+            // Create a RoutedEventArgs instance.
+            RoutedEventArgs routedEventArgs = new RoutedEventArgs(TextChangedEvent);
+
+            // Raise the event, which will bubble up through the element tree.
+            RaiseEvent(routedEventArgs);
+        }
+
+
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text",
+                      typeof(string), typeof(ChipsPanel), new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        public string Text
+        {
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
+
+        public static readonly DependencyProperty BorderOwnerVisibilityProperty = DependencyProperty.Register("BorderOwnerVisibility",
+                      typeof(Visibility), typeof(ChipsPanel), new FrameworkPropertyMetadata(Visibility.Hidden, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        public Visibility BorderOwnerVisibility
+        {
+            get { return (Visibility)GetValue(BorderOwnerVisibilityProperty); }
+            set { SetValue(BorderOwnerVisibilityProperty, value); }
+        }
+
+        #region Watermark
+        public static readonly DependencyProperty WatermarkTextProperty = DependencyProperty.Register("WatermarkText",
+           typeof(string), typeof(ChipsPanel), new PropertyMetadata(null));
+
+        public string WatermarkText
+        {
+            get { return (string)GetValue(WatermarkTextProperty); }
+            set { SetValue(WatermarkTextProperty, value); }
+        }
+        #endregion
+
+        #region IsEditable
+        public static readonly DependencyProperty IsEditableProperty = DependencyProperty.Register("IsEditable",
+           typeof(bool), typeof(ChipsPanel), new PropertyMetadata(true));
+
+        public bool IsEditable
+        {
+            get { return (bool)GetValue(IsEditableProperty); }
+            set { SetValue(IsEditableProperty, value); }
+        }
+        #endregion
+
         #region Consts
         private const string PART_TextBox = "PART_TextBox";
         private const string PART_ItemsPresenter = "PART_ItemsPresenter";
         #endregion
-
-        
 
         #region Fields
         protected ItemsPresenter _temsPresenter;
@@ -173,15 +232,18 @@ namespace FamilyFinance.Shared.Controls
         public ChipsPanel()
         {
             this.GotFocus += ChipsPanel_GotFocus;
-            
+
             //this.ItemContainerGenerator.ItemsChanged += ItemContainerGenerator_ItemsChanged;
             this.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
         }
 
         private void ChipsPanel_GotFocus(object sender, RoutedEventArgs e)
         {
-            FocusManager.SetFocusedElement(this, _textBox);
-            var focus = _textBox.Focusable;
+            if (_textBox != null)
+            {
+                FocusManager.SetFocusedElement(this, _textBox);
+                _textBox.Focus();
+            }
         }
 
         private void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
@@ -239,7 +301,7 @@ namespace FamilyFinance.Shared.Controls
         //        if (containerItem == null)
         //        {
         //            this.UpdateLayout();
-                    
+
         //            containerItem = this.ItemContainerGenerator.ContainerFromItem(item);
         //        }
 
@@ -267,8 +329,15 @@ namespace FamilyFinance.Shared.Controls
             if (textBox != null)
             {
                 _textBox = textBox;
-                _textBox.KeyDown += _textBox_KeyDown;
+                _textBox.PreviewKeyDown += _textBox_KeyDown;
+
+                _textBox.TextChanged += _textBox_TextChanged;
             }
+        }
+
+        private void _textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            RaiseCustomRoutedEvent();
         }
 
         private void _textBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -278,7 +347,7 @@ namespace FamilyFinance.Shared.Controls
             {
                 if (ItemsSource == null)
                 {
-                    this.Items.Insert(Items.Count - 1, new ChipsItem() { Content = textBox.Text });
+                    this.Items.Insert(Items.Count, new ChipsItem() { Content = textBox.Text });
                     textBox.Clear();
                 }
             }
@@ -306,5 +375,17 @@ namespace FamilyFinance.Shared.Controls
             return new ChipsItem();
         }
         #endregion
+
+        internal ScrollViewer GetScroll()
+        {
+            var element = GetTemplateChild("ChipsScroll") as ScrollViewer;
+            return element;
+        }
+
+        //internal TextBox GetTextBox()
+        //{
+        //    var element = GetTemplateChild("PART_TextBox") as TextBox;
+        //    return element;
+        //}
     }
 }
