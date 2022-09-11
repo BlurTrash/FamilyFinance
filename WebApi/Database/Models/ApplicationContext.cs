@@ -17,6 +17,7 @@ namespace WebApi.Database.Models
         public DbSet<Check> Checks { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CategoryExpense> CategoriesExpense { get; set; }
+        public DbSet<CurrencyRate> CurrencyRates { get; set; }
         
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
@@ -42,13 +43,17 @@ namespace WebApi.Database.Models
         //    Role moderatorRole = new Role { Id = 2, Name = moderatorRoleName };
         //    Role userRole = new Role { Id = 3, Name = userRoleName };
         //    Role guestRole = new Role { Id = 4, Name = guestRoleName };
-
+        //    // добавляем пользователей
         //    User adminUser = new User { Id = 1, Login = "BlurTrash", FirstName = "Павел", SecondName = "Кувшинчиков", Email = adminEmail, Password = adminPassword, RoleId = adminRole.Id };
         //    User testUser = new User { Id = 2, Login = "Vlado", FirstName = "Ваня", SecondName = "Пупкин", Email = userEmail, Password = userPassword, RoleId = userRole.Id };
+        //    // добавлляем валюту
+        //    CurrencyRate currencyRate = new CurrencyRate { Id = 1, CurrencyStringCode = "RUB", CurrencyName = "Российский рубль", ExchangeRate = 1 };
 
 
         //    modelBuilder.Entity<Role>().HasData(new Role[] { adminRole, moderatorRole, userRole, guestRole });
         //    modelBuilder.Entity<User>().HasData(new User[] { adminUser, testUser });
+        //    modelBuilder.Entity<CurrencyRate>().HasData(new CurrencyRate[] { currencyRate });
+
         //    base.OnModelCreating(modelBuilder);
         //}
     }
