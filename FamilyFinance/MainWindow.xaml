@@ -11,7 +11,7 @@
         xmlns:converters="clr-namespace:FamilyFinance.Core.Converters"
         d:DataContext="{d:DesignInstance Type=localViewModel:MainVM}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1100">
+        Title="FamilyFinance" Height="600" Width="1100">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -41,13 +41,16 @@
                 </TabItem.Content>
             </TabItem>
 
-            <TabItem Name="Schet" Header="Счета">
+            <TabItem Name="Сhecks" Header="Счета">
                 <TabItem.Content>
-                    <TextBlock Text="Счета"/>
+                    <Grid>
+                        <views:NonAuth Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource NonAuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource NonAuthVisibilityConverter}, Mode=OneWay}"/>
+                        <views:ChecksPage Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource AuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource AuthVisibilityConverter}, Mode=OneWay}"/>
+                    </Grid>
                 </TabItem.Content>
             </TabItem>
 
-            <TabItem Name="Cat" Header="Категории">
+            <TabItem Name="Categories" Header="Категории">
                 <TabItem.Content>
                     <Grid>
                         <views:NonAuth Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource NonAuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource NonAuthVisibilityConverter}, Mode=OneWay}"/>
@@ -76,7 +79,9 @@
 
             <TabItem  Name="Nov" Header="Новости" >
                 <TabItem.Content>
-                    <TextBlock Text="Новости"/>
+                    <Grid>
+                        <views:TestPage Margin="10"/>
+                    </Grid>
                 </TabItem.Content>
             </TabItem>
 
