@@ -16,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Core.Authorization;
 using WebApi.Database.Models;
+using WebApi.Services;
 
 namespace WebApi
 {
@@ -31,6 +32,11 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Также не забудем добавить поддержку кэширования в проект и подключим наш CurrencyService как сервис
+            services.AddHostedService<CurrencyService>();
+            services.AddMemoryCache();
+            //
+
             services.AddControllers();
 
             string connection = Configuration.GetConnectionString("default");
