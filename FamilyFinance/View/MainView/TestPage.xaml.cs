@@ -3,6 +3,7 @@ using FamilyFinance.WebApi.Service;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,16 +20,18 @@ using System.Windows.Shapes;
 namespace FamilyFinance.View.MainView
 {
     /// <summary>
-    /// Логика взаимодействия для MainPage.xaml
+    /// Логика взаимодействия для TestPage.xaml
     /// </summary>
-    public partial class MainPage : Page
+    public partial class TestPage : UserControl, INotifyPropertyChanged
     {
         public ObservableCollection<CurrencyRate> RatesList { get; set; } = new ObservableCollection<CurrencyRate>();
         public User currentUser { get; set; } = DataManager.CurrentUser;
-        public MainPage()
+        public TestPage()
         {
             InitializeComponent();
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -87,7 +90,9 @@ namespace FamilyFinance.View.MainView
             txBoxUserRole.Text = text;
         }
 
-        private async void Page_Loaded(object sender, RoutedEventArgs e)
+    
+
+        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             Func<Client, Task> manipulatonDataMethod = async (client) =>
             {
