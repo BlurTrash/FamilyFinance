@@ -55,7 +55,7 @@ namespace WebApi.Services
                         {
                             CurrencyName = item.ValuteName,
                             CurrencyStringCode = item.ValuteStringCode,
-                            ExchangeRate = Convert.ToDouble(item.ExchangeRate)
+                            ExchangeRate = Decimal.Round(Convert.ToDecimal(item.ExchangeRate), 2)
                         });
                     }
 
