@@ -30,21 +30,27 @@ namespace WebApi.Controllers
         /// Возвращает: список со всеми валютами и курсами
         /// </summary>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         [Authorize]
-        public ActionResult<List<CurrencyRate>> Get()
+        public ActionResult<IEnumerable<CurrencyRate>> GetAll()
         {
-            if (!memoryCache.TryGetValue("key_currencyList", out currencyList))
+            try
             {
-                throw new Exception("Ошибка получения данных");
-            }
-            foreach (var item in currencyList)
-            {
-                db.Add(item);
-                db.SaveChanges();
-            }
-            
+                //if (!memoryCache.TryGetValue("key_currencyList", out currencyList))
+                //{
+                //    throw new Exception("Ошибка получения данных");
+                //}
+                var collection = (IEnumerable<CurrencyRate>)db.CurrencyRates.Select(c => c);
 
-            return Ok(currencyList);
+                return Ok(collection);
+                //return Ok(currencyList);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException?.Message);
+            }
         }
     }
 }

@@ -21,20 +21,20 @@ namespace WebApi.Database.Models
         /// <summary>
         /// Катерия расхода
         /// </summary>
-        public int? CategoryId { get; set; }
-        [JsonIgnore]
-        public Category? Category { get; set; }
+        public int? CategoryExpenseId { get; set; }
+        
+        public CategoryExpense? CategoryExpense { get; set; }
         /// <summary>
         /// Подкатегория расхода
         /// </summary>
-        public int? SubCategoryId { get; set; }
-        [JsonIgnore]
-        public SubCategory? SubCategory { get; set; }
+        public int? SubCategoryExpenseId { get; set; }
+       
+        public SubCategoryExpense? SubCategoryExpense { get; set; }
         /// <summary>
         /// Счет списания расхода
         /// </summary>
-        public int? CheckId { get; set; }
-        public Check? Check { get; set; }
+        public int CheckId { get; set; }
+        public Check Check { get; set; }
         /// <summary>
         /// Дата расхода
         /// </summary>
@@ -44,6 +44,10 @@ namespace WebApi.Database.Models
         /// </summary>
         [Column(TypeName = "money")]
         public decimal SpentMoney { get; set; }
+        /// <summary>
+        /// Сумма счета на момент операции
+        /// </summary>
+        public decimal TransactionInvoiceAmount { get; set; }
         /// <summary>
         /// Описание расхода
         /// </summary>

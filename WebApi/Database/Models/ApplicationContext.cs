@@ -18,7 +18,7 @@ namespace WebApi.Database.Models
         public DbSet<Category> Categories { get; set; }
         public DbSet<CategoryExpense> CategoriesExpense { get; set; }
         public DbSet<CurrencyRate> CurrencyRates { get; set; }
-        
+
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
             //Database.EnsureDeleted();

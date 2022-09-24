@@ -23,6 +23,6 @@ namespace WebApi.Database.Models
         /// <summary>
         /// Обменный курс
         /// </summary>
-        public double ExchangeRate { get; set; }
+        public decimal ExchangeRate { get; set; }
     }
 }

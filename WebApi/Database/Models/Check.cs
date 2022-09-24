@@ -22,6 +22,17 @@ namespace WebApi.Database.Models
         [Column(TypeName = "money")]
         public decimal Amount { get; set; }
         public bool IsMasterCheck { get; set; }
-        public string Currency { get; set; }
+        public int CurrencyRateId { get; set; }
+        public CurrencyRate CurrencyRate { get; set; }
+        public string PresentName
+        {
+            get
+            {
+                return
+                    $"[ {Name} ]" +
+                    " - " +
+                    $"{Amount.ToString("F2")} " + $"{(CurrencyRate != null ? CurrencyRate.CurrencyStringCode : string.Empty)}";
+            }
+        }
     }
 }
