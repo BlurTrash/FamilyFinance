@@ -55,6 +55,21 @@ namespace FamilyFinance.Model
                 _expensesСategories.AddRange(value);
             }
         }
+
+        //Счета пользователя
+        private static ObservableCollection<Check> _userChecks = new();
+        public static ObservableCollection<Check> UserChecks
+        {
+            get
+            {
+                return _userChecks;
+            }
+            set
+            {
+                _userChecks.Clear();
+                _userChecks.AddRange(value);
+            }
+        }
         #endregion
 
         /// <summary>
@@ -72,15 +87,18 @@ namespace FamilyFinance.Model
                 // Загрузка данных
                 var incomeСategories = client.ApiCategoryGetAllByUserIdAsync(CurrentUser.Id); //загрузка категорий доходов
                 var expensesCategories = client.ApiCategoryExpenseGetAllByUserIdAsync(CurrentUser.Id); //загрузка категорий расходов
+                var userChecks = client.ApiCheckGetAllByUserIdAsync(CurrentUser.Id); //загрузка всех счетов пользователя
 
                 // Загрузка данных
                 await Task.WhenAll(
                     incomeСategories,
-                    expensesCategories);
+                    expensesCategories,
+                    userChecks);
 
                 // Устанавливаем значения свойствам
                 IncomeСategories = new(incomeСategories.Result.ToList());
                 ExpensesСategories = new(expensesCategories.Result.ToList());
+                UserChecks = new(userChecks.Result.ToList());
             };
 
             var resultStatus = await ClientManager.ManipulatonData(manipulationDataMethod);
@@ -114,6 +132,17 @@ namespace FamilyFinance.Model
                 var expensesСategories = await client.ApiCategoryExpenseGetAllByUserIdAsync(CurrentUser.Id); //загрузка категорий расходов
                 // Устанавливаем значения свойствам
                 ExpensesСategories = new(expensesСategories.ToList());
+            };
+            await ClientManager.ManipulatonData(manipulationDataMethod);
+        }
+
+        public static async Task UpdateUserChecks()
+        {
+            Func<Client, Task> manipulationDataMethod = async (client) =>
+            {
+                var usersChecks = await client.ApiCheckGetAllByUserIdAsync(CurrentUser.Id); //загрузка счетов пользователя
+                // Устанавливаем значения свойствам
+                UserChecks = new(usersChecks.ToList());
             };
             await ClientManager.ManipulatonData(manipulationDataMethod);
         }
