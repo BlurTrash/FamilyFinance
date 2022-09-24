@@ -96,6 +96,23 @@ namespace FamilyFinance.Shared.Controls
             return value;
         }
 
+        //свойства видимости секунд и дней
+        public static readonly DependencyProperty SecondsVisibilityProperty = DependencyProperty.Register("SecondsVisibility",
+            typeof(Visibility), typeof(TimeSpanUpDown), new FrameworkPropertyMetadata(Visibility.Hidden, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        public Visibility SecondsVisibility
+        {
+            get { return (Visibility)GetValue(SecondsVisibilityProperty); }
+            set { SetValue(SecondsVisibilityProperty, value); }
+        }
+
+        public static readonly DependencyProperty DaysVisibilityProperty = DependencyProperty.Register("DaysVisibility",
+            typeof(Visibility), typeof(TimeSpanUpDown), new FrameworkPropertyMetadata(Visibility.Visible, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        public Visibility DaysVisibility
+        {
+            get { return (Visibility)GetValue(DaysVisibilityProperty); }
+            set { SetValue(DaysVisibilityProperty, value); }
+        }
+
 
         //обычные свойства с макс значениями для времени поидее должны быть (привязанные к константам)
         public static readonly DependencyProperty SecondsProperty = DependencyProperty.Register("Seconds",
@@ -433,7 +450,7 @@ namespace FamilyFinance.Shared.Controls
                 MinutesUpDown = minutesUpDown;
                 MinutesUpDown.MinValue = 0;
                 MinutesUpDown.MaxValue = MAX_MINUTES;
-                MinutesUpDown.ValueChanged += MinutesUpDown_ValueChanged; ;
+                MinutesUpDown.ValueChanged += MinutesUpDown_ValueChanged;
             }
         }
 
@@ -450,7 +467,7 @@ namespace FamilyFinance.Shared.Controls
                 SecondsUpDown = secondsUpDown;
                 SecondsUpDown.MinValue = 0;
                 SecondsUpDown.MaxValue = MAX_SECONDS;
-                SecondsUpDown.ValueChanged += SecondsUpDown_ValueChanged; ;
+                SecondsUpDown.ValueChanged += SecondsUpDown_ValueChanged;
             }
         }
 

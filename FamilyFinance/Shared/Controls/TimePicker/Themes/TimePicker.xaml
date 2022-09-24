@@ -24,9 +24,9 @@
                                   Height="10"
                                   Fill="#FF000000"
                                   Margin="0,1,0,0"/>
-                          
+
                         </ToggleButton>
-                        
+
                         <Popup x:Name="PART_Popup"
                                HorizontalOffset="1"
                                VerticalOffset="1"
@@ -50,15 +50,17 @@
                                     <local:TimeSpanUpDown x:Name="PART_TimeSpanUpDown"
                                                           BorderThickness="0"
                                                           VerticalAlignment="Center"
-                                                          HorizontalAlignment="Center"></local:TimeSpanUpDown>
+                                                          HorizontalAlignment="Center"
+                                                          SecondsVisibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SecondsVisibility}"
+                                                          DaysVisibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DaysVisibility}"/>
                                 </Border>
                             </Grid>
                         </Popup>
-                        
+
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
+
 </ResourceDictionary>

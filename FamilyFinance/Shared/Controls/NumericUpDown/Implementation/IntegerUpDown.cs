@@ -102,6 +102,7 @@ namespace FamilyFinance.Shared.Controls
                     else
                     {
                         value -= MinorDelta;
+                        CoerceValueToBounds(ref value);
                     }
                 }
                 else
@@ -113,6 +114,7 @@ namespace FamilyFinance.Shared.Controls
                     else
                     {
                         value -= MajorDelta;
+                        CoerceValueToBounds(ref value);
                     }
                 }
             }
@@ -140,6 +142,7 @@ namespace FamilyFinance.Shared.Controls
                     else
                     {
                         value += MinorDelta;
+                        CoerceValueToBounds(ref value);
                     }
                 }
                 else
@@ -151,6 +154,7 @@ namespace FamilyFinance.Shared.Controls
                     else
                     {
                         value += MajorDelta;
+                        CoerceValueToBounds(ref value);
                     }
                 }
             }
@@ -229,6 +233,8 @@ namespace FamilyFinance.Shared.Controls
             {
                 int.TryParse(source, out value);
             }
+
+            CoerceValueToBounds(ref value);
 
             return value;
         }

@@ -53,7 +53,7 @@ namespace FamilyFinance.Shared.Controls
 
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(T), typeof(NumericUpDownBase<T>),
-                                        new PropertyMetadata(default(T), ValueChangedCallback, CoerceValue));
+                                        new FrameworkPropertyMetadata(default(T), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, ValueChangedCallback, CoerceValue));
 
         public T Value
         {

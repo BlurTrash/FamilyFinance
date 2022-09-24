@@ -12,6 +12,13 @@ using System.Windows.Media;
 
 namespace FamilyFinance.Shared.Controls
 {
+    public enum TimePickerFormat
+    {
+        DaysHoursMinutesSeconds,
+        DaysHoursMinutes,
+        HoursMinutes
+    }
+
     internal class KeyboardUtilities
     {
         internal static bool IsKeyModifyingPopupState(KeyEventArgs e)
@@ -113,7 +120,7 @@ namespace FamilyFinance.Shared.Controls
                 control.TotalSeconds = newValue.TotalSeconds;
 
                 control.OnValueChanged(
-                    new TimeSpanUpDownValueChangedEventArgs(TimeSpanUpDown.ValueChangedEvent,
+                    new TimeSpanUpDownValueChangedEventArgs(ValueChangedEvent,
                         newValue));
 
                 control.isValueUpdate = false;
@@ -133,10 +140,79 @@ namespace FamilyFinance.Shared.Controls
 
             if (control._textBox != null)
             {
-                control._textBox.Text = value.ToString();
+                //control._textBox.Text = value.ToString();
+                switch (control.Format)
+                {
+                    case TimePickerFormat.DaysHoursMinutesSeconds:
+                        control._textBox.Text = value.ToString(@"dd\.hh\:mm\:ss");
+                        break;
+                    case TimePickerFormat.DaysHoursMinutes:
+                        control._textBox.Text = value.ToString(@"dd\.hh\:mm");
+                        break;
+                    case TimePickerFormat.HoursMinutes:
+                        control._textBox.Text = value.ToString(@"hh\:mm");
+                        break;
+                    default:
+                        control._textBox.Text = value.ToString();
+                        break;
+                }
             }
 
             return value;
+        }
+        #endregion
+
+        #region SecondsVisibility and DaysVisibility
+        public static readonly DependencyProperty SecondsVisibilityProperty = DependencyProperty.Register("SecondsVisibility",
+            typeof(Visibility), typeof(TimePicker), new FrameworkPropertyMetadata(Visibility.Hidden, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        public Visibility SecondsVisibility
+        {
+            get { return (Visibility)GetValue(SecondsVisibilityProperty); }
+            private set { SetValue(SecondsVisibilityProperty, value); }
+        }
+
+        public static readonly DependencyProperty DaysVisibilityProperty = DependencyProperty.Register("DaysVisibility",
+            typeof(Visibility), typeof(TimePicker), new FrameworkPropertyMetadata(Visibility.Visible, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        public Visibility DaysVisibility
+        {
+            get { return (Visibility)GetValue(DaysVisibilityProperty); }
+            private set { SetValue(DaysVisibilityProperty, value); }
+        }
+        #endregion
+
+        #region TimeFormat
+        public static readonly DependencyProperty FormatProperty = DependencyProperty.Register("Format",
+            typeof(TimePickerFormat), typeof(TimePicker), new FrameworkPropertyMetadata(TimePickerFormat.DaysHoursMinutes, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnFormatChanged));
+
+        public TimePickerFormat Format
+        {
+            get { return (TimePickerFormat)GetValue(FormatProperty); }
+            set { SetValue(FormatProperty, value); }
+        }
+
+        private static void OnFormatChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = (TimePicker)d;
+            if (control != null)
+            {
+                switch (control.Format)
+                {
+                    case TimePickerFormat.DaysHoursMinutesSeconds:
+                        control.SecondsVisibility = Visibility.Visible;
+                        control.DaysVisibility = Visibility.Visible;
+                        break;
+                    case TimePickerFormat.DaysHoursMinutes:
+                        control.SecondsVisibility = Visibility.Hidden;
+                        control.DaysVisibility = Visibility.Visible;
+                        break;
+                    case TimePickerFormat.HoursMinutes:
+                        control.SecondsVisibility = Visibility.Hidden;
+                        control.DaysVisibility = Visibility.Hidden;
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
         #endregion
 
@@ -453,15 +529,29 @@ namespace FamilyFinance.Shared.Controls
 
         private void TextBoxOnLostFocus(object sender, RoutedEventArgs e)
         {
-
-
             if (TryParseStringToTimeSpan(_textBox.Text))
             {
                 Value = TimeSpan.Parse(_textBox.Text);
             }
             else
             {
-                _textBox.Text = Value.ToString();
+                //_textBox.Text = Value.ToString();
+
+                switch (Format)
+                {
+                    case TimePickerFormat.DaysHoursMinutesSeconds:
+                        _textBox.Text = Value.ToString(@"dd\.hh\:mm\:ss");
+                        break;
+                    case TimePickerFormat.DaysHoursMinutes:
+                        _textBox.Text = Value.ToString(@"dd\.hh\:mm");
+                        break;
+                    case TimePickerFormat.HoursMinutes:
+                        _textBox.Text = Value.ToString(@"hh\:mm");
+                        break;
+                    default:
+                        _textBox.Text = Value.ToString();
+                        break;
+                }
             }
         }
 
@@ -619,6 +709,7 @@ namespace FamilyFinance.Shared.Controls
             {
                 timeSpanUpDown.ApplyTemplate();
                 _timeSpanUpDown = timeSpanUpDown;
+                _timeSpanUpDown.Value = Value;
                 _timeSpanUpDown.ValueChanged += TimeSpanUpDownValueChanged;
             }
         }
