@@ -23,8 +23,8 @@ namespace FamilyFinance.View.MainView
     {
         public ExpensesPage()
         {
-            InitializeComponent();
             DataContext = new ExpensesVM();
+            InitializeComponent();
         }
     }
 }

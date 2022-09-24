@@ -7,6 +7,7 @@
              xmlns:controls="clr-namespace:FamilyFinance.Shared.Controls"
              xmlns:validation="clr-namespace:FamilyFinance.Shared.ValidationRules"
              xmlns:localViewModel="clr-namespace:FamilyFinance.ViewModel.MainVM"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              d:DataContext="{d:DesignInstance Type=localViewModel:ExpensesVM}"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1100" FontSize="14">
@@ -18,49 +19,106 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Border Background="White" CornerRadius="5" BorderThickness="1" BorderBrush="{StaticResource BorderBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" BorderThickness="1" CornerRadius="4 4 0 0" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource HeaderBrush}">
+            <Grid Height="54">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Margin="20 0 0 0" VerticalAlignment="Center" Grid.Column="0" Text="Расходы за" Style="{StaticResource FFTextBlockTitle}"/>
+                <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="Привязка месяц" Style="{StaticResource FFTextBlockTitle}"/>
+                <TextBlock VerticalAlignment="Center" Grid.Column="4" Text="Привязка год" Style="{StaticResource FFTextBlockTitle}"/>
+            </Grid>
+        </Border>
+
+
+        <Border Grid.Row="1" Background="{StaticResource ControlBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1 0 1 1" CornerRadius="0 0 4 4">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
+                
+
                 <Grid Grid.Row="0" Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="20"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="20"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="Расходы за" Style="{StaticResource FFTextBlockTitle}"/>
-                    <TextBlock Grid.Column="2" Text="Привязка месяц" Style="{StaticResource FFTextBlockTitle}"/>
-                    <TextBlock Grid.Column="4" Text="Привязка год" Style="{StaticResource FFTextBlockTitle}"/>
-                </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <controls:FFButton Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Добавить" Height="34" Margin="0,0,40,0" Command="{Binding AddExpenseCommand}"/>
 
-                <Grid Grid.Row="1" Margin="10">
-                    <StackPanel Orientation="Horizontal">
-                        <controls:FFButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Добавить" Height="34" Margin="0 0 40 0"/>
-
-                        <StackPanel Margin="10 0 0 0" Orientation="Horizontal">
+                        <StackPanel Grid.Column="1" Margin="10 0 0 0" Orientation="Horizontal">
                             <RadioButton IsChecked="True" Content="По месяцам" VerticalAlignment="Center"/>
                             <RadioButton Content="По дням" VerticalAlignment="Center" Margin="10 0 0 0"/>
                         </StackPanel>
 
-                        <Grid Margin="10 0 0 0">
+                        <Grid Grid.Column="2" Margin="10 0 10 0">
                             <StackPanel Orientation="Horizontal">
-                                <ComboBox x:Name="CBMounth" Margin="15 0 0 0" IsEditable="False" Width="150" Style="{StaticResource FFComboBox}"/>
-                                <ComboBox x:Name="CBYears" Margin="15 0 0 0" IsEditable="False" Width="150" Style="{StaticResource FFComboBox}"/>
+                                <ComboBox x:Name="CBMounth" Margin="15 0 0 0" IsEditable="False" Width="150" SelectedItem="{Binding SelectedMonth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Months}" Style="{StaticResource FFComboBox}"/>
+                                <ComboBox x:Name="CBYears" Margin="15 0 0 0" IsEditable="False" Width="150" SelectedItem="{Binding SelectedYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Years}" Style="{StaticResource FFComboBox}"/>
                             </StackPanel>
                             <DatePicker IsEnabled="False" Visibility="Collapsed" Width="150" Margin="10 0 0 0" />
-                        </Grid>    
-                    </StackPanel>
+                        </Grid>
+
+                        <controls:FFButton Grid.Column="3" Icon="None" Content="Обновить" HorizontalAlignment="Left" Style="{StaticResource FFButton}"/>
+                    </Grid>
                 </Grid>
 
-                <Grid Grid.Row="2" Margin="10 10 0 0">
-                    <DataGrid></DataGrid>
+                <Grid Grid.Row="1" Margin="10 10 0 0">
+                    <DataGrid AutoGenerateColumns="False"
+                              IsReadOnly="True" ColumnWidth="*"
+                              ItemsSource="{Binding Expenses}" 
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              CanUserResizeColumns="False"
+                              CanUserResizeRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="ColumnCategory" Header="Категория" MinWidth="250" MaxWidth="300" Binding="{Binding Category.Name}"/>
+                            <DataGridTextColumn x:Name="ColumnSubCategory" Header="Подкатегория"  Width="auto" Binding="{Binding SubCategory.Name}"/>
+                            <DataGridTextColumn x:Name="ColumnDate" Header="Дата" Width="auto" Binding="{Binding Date}"/>
+                            <DataGridTextColumn x:Name="ColumnCheck" Header="Счет"  Width="auto" Binding="{Binding Check.Name}"/>
+                            <DataGridTextColumn x:Name="ColumnCurrencyStringCode" Header="Валюта" Width="auto" Binding="{Binding Check.CurrencyRate.CurrencyStringCode}"/>
+                            <DataGridTextColumn x:Name="ColumnAmount" Header="Сумма" Binding="{Binding SpentMoney, StringFormat=F2}"/> <!--Width="{Binding Source={x:Reference Name=CurrencySumm}, Path=ActualWidth}"-->
+                            <DataGridTemplateColumn Width="auto">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button x:Name="BtnEdit" Grid.Column="0" Height="25" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                                                                Content="{StaticResource Edit}" 
+                                                                Command="{Binding ElementName=ChecksControl, Path=DataContext.EditCheckCommand}" 
+                                                                CommandParameter="{Binding}"
+                                                                Style="{StaticResource FFButtonEllipse}"/>
+
+                                            <Button x:Name="BtnDelete" Grid.Column="2" Height="25" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                                                                Content="{StaticResource Delete}"    
+                                                                Command="{Binding ElementName=ChecksControl, Path=DataContext.DeleteCheckCommand}" 
+                                                                CommandParameter="{Binding}"
+                                                                Style="{StaticResource FFButtonEllipse}">
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
                 
             </Grid>

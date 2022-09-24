@@ -1,0 +1,216 @@
+﻿<Window x:Class="FamilyFinance.View.MainView.ChecksDialogWindow.ChecksTransferWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FamilyFinance.View.MainView.ChecksDialogWindow"
+        xmlns:localViewModel="clr-namespace:FamilyFinance.ViewModel.MainVM.ChecksDialogWindowVM"
+        xmlns:controls="clr-namespace:FamilyFinance.Shared.Controls"
+        xmlns:validation="clr-namespace:FamilyFinance.Shared.ValidationRules"
+        xmlns:extensions ="clr-namespace:FamilyFinance.Shared.Controls.Extensions"
+        xmlns:w="clr-namespace:FamilyFinance.View.MainView.ChecksDialogWindow"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        d:DataContext="{d:DesignInstance Type=localViewModel:ChecksTransferWindowVM}"
+        mc:Ignorable="d"
+        Title="Перевод" Height="500" Width="650" FontSize="14" SizeToContent="Height" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/FamilyFinance;component/FFResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.Style>
+        <Style TargetType="{x:Type w:ChecksTransferWindow}">
+            <Setter Property="InteractionResult"
+                    Value="{Binding UpdateResult}"/>
+        </Style>
+    </Window.Style>
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Margin="0 0 15 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" BorderThickness="1" CornerRadius="4 4 0 0" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource HeaderBrush}">
+                    <Grid Height="34">
+                        <TextBlock Margin="20 0" VerticalAlignment="Center" Grid.Column="0" Text="Счет списания" Style="{StaticResource FFTextBlockTitle}"/>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="1" Background="{StaticResource ControlBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1 0 1 1" CornerRadius="0 0 4 4">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="Счет" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                        <ComboBox Grid.Row="1" x:Name="CurrencyRateCB" Margin="0 0 0 20"
+                                  IsEditable="True"
+                                  ItemsSource="{Binding Checks}"
+                                  DisplayMemberPath="PresentName"
+                                  Validation.ErrorTemplate="{StaticResource FFValidationFailed}" 
+                                  Style="{StaticResource FFComboBox}"
+                                  extensions:ValidationBehavior.HasError="{Binding HasErrorsOutgoingCheck}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding ChangeOutgoingCheckDataCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding UpdateNewIncomingAmountCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <ComboBox.SelectedItem>
+                                <Binding Path="SelectedOutgoingCheck" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validation:ComboBoxItemNotNullValidationRule ValidatesOnTargetUpdated="True" ErrorMessage="Выберите счет списания"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </ComboBox.SelectedItem>
+                        </ComboBox>
+
+                        <TextBlock Grid.Row="2" Text="Остаток" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                        <TextBox Grid.Row="3" Margin="0 0 0 10" Text="{Binding SelectedOutgoingCheck.Amount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" IsEnabled="False" Background="#E9ECEF" Style="{StaticResource FFTextBox}"/>
+
+                        <Grid Grid.Row="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Валюта" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                                <TextBox  Text="{Binding SelectedOutgoingCheck.CurrencyRate.CurrencyStringCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" IsEnabled="False" Background="#E9ECEF" Style="{StaticResource FFTextBox}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Курс" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                                <TextBox Margin="0 0 0 20" Text="{Binding SelectedOutgoingCheck.CurrencyRate.ExchangeRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" IsEnabled="False" Background="#E9ECEF" Style="{StaticResource FFTextBox}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <TextBlock Grid.Row="5" Text="Сумма списания" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                        <controls:DecimalUpDown Grid.Row="6"
+                                                DecimalPlaces="2" 
+                                                Value="{Binding TransferSumm}"
+                                                MinValue="0" 
+                                                MaxValue="{Binding MaxTransferSumm}"
+                                                Style="{StaticResource FFNumericUpDown}" 
+                                                Validation.ErrorTemplate="{StaticResource FFValidationFailed}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="ValueChanged">
+                                    <i:InvokeCommandAction Command="{Binding UpdateNewIncomingAmountCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </controls:DecimalUpDown>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Button VerticalAlignment="Center" Style="{StaticResource FFButton}" Content="&#xe91b;" FontFamily="{StaticResource PrimeIcons}" Command="{Binding TransferCommand}"/>
+            </Grid>
+
+            <Grid Grid.Column="2" Margin="15 0 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" BorderThickness="1" CornerRadius="4 4 0 0" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource HeaderBrush}">
+                    <Grid Height="34">
+                        <TextBlock Margin="20 0" VerticalAlignment="Center" Grid.Column="0" Text="Счет получения" Style="{StaticResource FFTextBlockTitle}"/>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="1" Background="{StaticResource ControlBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1 0 1 1" CornerRadius="0 0 4 4">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="Счет" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                        <ComboBox Grid.Row="1" Margin="0 0 0 20"
+                                  IsEditable="True"
+                                  ItemsSource="{Binding Checks}"
+                                  DisplayMemberPath="PresentName"
+                                  Validation.ErrorTemplate="{StaticResource FFValidationFailed}" 
+                                  Style="{StaticResource FFComboBox}"
+                                  extensions:ValidationBehavior.HasError="{Binding HasErrorsIncomingCheck}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding UpdateNewIncomingAmountCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <ComboBox.SelectedItem>
+                                <Binding Path="SelectedIncomingCheck" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validation:ComboBoxItemNotNullValidationRule ValidatesOnTargetUpdated="True" ErrorMessage="Выберите счет пополнения"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </ComboBox.SelectedItem>
+                        </ComboBox>
+
+                        <TextBlock Grid.Row="2" Text="Остаток" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                        <TextBox Grid.Row="3" Margin="0 0 0 10" Text="{Binding SelectedIncomingCheck.Amount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" IsEnabled="False" Background="#E9ECEF" Style="{StaticResource FFTextBox}"/>
+
+                        <Grid Grid.Row="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Валюта" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                                <TextBox  Text="{Binding SelectedIncomingCheck.CurrencyRate.CurrencyStringCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" IsEnabled="False" Background="#E9ECEF" Style="{StaticResource FFTextBox}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Курс" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                                <TextBox Margin="0 0 0 20" Text="{Binding SelectedIncomingCheck.CurrencyRate.ExchangeRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" IsEnabled="False" Background="#E9ECEF" Style="{StaticResource FFTextBox}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <TextBlock Grid.Row="5" Text="Новая сумма" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                        <TextBox Grid.Row="6" Margin="0 0 0 20" Text="{Binding NewIncomingAmount, StringFormat=F2}" IsReadOnly="True" IsEnabled="False" Background="#E9ECEF" Style="{StaticResource FFTextBox}"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="0 10 0 0" Grid.IsSharedSizeScope="True" VerticalAlignment="Bottom">
+            <Grid HorizontalAlignment="Right">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="A"/>
+                    <ColumnDefinition SharedSizeGroup="A"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Margin="0 0 10 0" Content="Перевести" Command="{Binding TransferCommand}" Style="{StaticResource FFButton}"/>
+                <Button Grid.Column="1" Margin="10 0 0 0" Style="{StaticResource FFButtonCancel}" Command="{Binding CancelCheckTrasferCommand}" Content="Отмена"/>
+            </Grid>
+        </Grid>
+    </Grid>
+    
+</Window>

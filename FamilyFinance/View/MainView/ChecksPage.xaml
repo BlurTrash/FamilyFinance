@@ -7,6 +7,7 @@
              xmlns:controls="clr-namespace:FamilyFinance.Shared.Controls"
              xmlns:validation="clr-namespace:FamilyFinance.Shared.ValidationRules"
              xmlns:localViewModel="clr-namespace:FamilyFinance.ViewModel.MainVM"
+             xmlns:converters="clr-namespace:FamilyFinance.Core.Converters"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              d:DataContext="{d:DesignInstance Type=localViewModel:ChecksVM}"
              mc:Ignorable="d" 
@@ -16,12 +17,103 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/FamilyFinance;component/FFResourceDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <converters:TrueFalseConverter x:Key="TrueFalseConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Border Background="White" CornerRadius="5" BorderThickness="1" BorderBrush="{StaticResource BorderBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" BorderThickness="1" CornerRadius="4 4 0 0" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource HeaderBrush}">
+            <Grid Height="54">
+                <TextBlock Margin="20 0" VerticalAlignment="Center" Grid.Column="0" Text="Счета пользователя" Style="{StaticResource FFTextBlockTitle}"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Background="{StaticResource ControlBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1 0 1 1" CornerRadius="0 0 4 4">
             <Grid>
-                <TextBlock Text="Счета"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                
+
+                <Grid Grid.Row="0" Margin="10">
+                    <StackPanel Orientation="Horizontal">
+                        <controls:FFButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Добавить" Height="34" Margin="0 0 20 0" Command="{Binding AddCheckCommand}"/>
+                        <controls:FFButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Icon="None" Content="Обновить" Height="34" Margin="0 0 20 0" Command="{Binding UpdateCheckCommand}"/>
+                        <controls:FFButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Icon="None" Content="Перевести" Height="34" Command="{Binding TransferCheckCommand}"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid AutoGenerateColumns="False" HorizontalAlignment="Left"
+                              IsReadOnly="True" 
+                              ItemsSource="{Binding Checks}" 
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              CanUserResizeColumns="False"
+                              CanUserResizeRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="ColumnName" Header="Название счета" MinWidth="250" MaxWidth="300" Binding="{Binding Name}"/>
+                            <DataGridTextColumn x:Name="ColumnDescription" Header="Описание"  MinWidth="250" MaxWidth="300" Binding="{Binding Description}"/>
+                            <DataGridTextColumn x:Name="ColumnIsMasterCheck" Header="Базовый" Width="auto" Binding="{Binding IsMasterCheck, Converter={StaticResource TrueFalseConverter}}"/>
+                            <DataGridTextColumn x:Name="ColumnExchangeRate" Header="Курс"  Width="auto" Binding="{Binding CurrencyRate.ExchangeRate}"/>
+                            <DataGridTextColumn x:Name="ColumnCurrencyStringCode" Header="Валюта" Width="auto" Binding="{Binding CurrencyRate.CurrencyStringCode}"/>
+                            <DataGridTextColumn x:Name="ColumnAmount" Header="Сумма" Width="{Binding Source={x:Reference Name=CurrencySumm}, Path=ActualWidth}" Binding="{Binding Amount, StringFormat=F2}"/>
+                            <DataGridTemplateColumn Width="auto">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button x:Name="BtnEdit" Grid.Column="0" Height="25" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                                                                Content="{StaticResource Edit}" 
+                                                                Command="{Binding ElementName=ChecksControl, Path=DataContext.EditCheckCommand}" 
+                                                                CommandParameter="{Binding}"
+                                                                Style="{StaticResource FFButtonEllipse}"/>
+
+                                            <Button x:Name="BtnDelete" Grid.Column="2" Height="25" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                                                                Content="{StaticResource Delete}"    
+                                                                Command="{Binding ElementName=ChecksControl, Path=DataContext.DeleteCheckCommand}" 
+                                                                CommandParameter="{Binding}"
+                                                                Style="{StaticResource FFButtonEllipse}">
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <DataGrid Grid.Row="1" HeadersVisibility="None"
+                              BorderThickness="1 0 0 1"
+                              AutoGenerateColumns="False"
+                              HorizontalAlignment="Left"
+                              IsReadOnly="True" 
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              CanUserResizeColumns="False"
+                              CanUserResizeRows="False" ItemsSource="{Binding Results}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="{Binding Source={x:Reference Name=ColumnName}, Path=ActualWidth}"/>
+                            <DataGridTextColumn Width="{Binding Source={x:Reference Name=ColumnDescription}, Path=ActualWidth}"/>
+                            <DataGridTextColumn Width="{Binding Source={x:Reference Name=ColumnIsMasterCheck}, Path=ActualWidth}"/>
+                            <DataGridTextColumn Width="{Binding Source={x:Reference Name=ColumnExchangeRate}, Path=ActualWidth}"/>
+                            <DataGridTextColumn Width="{Binding Source={x:Reference Name=ColumnCurrencyStringCode}, Path=ActualWidth}" Binding="{Binding ResultText}"/>
+                            <DataGridTextColumn x:Name="CurrencySumm" Width="auto" Binding="{Binding Summ, StringFormat={}{0:C}, ConverterCulture=ru-RU}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
             </Grid>
         </Border>
     </Grid>

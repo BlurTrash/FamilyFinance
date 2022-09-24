@@ -1,0 +1,198 @@
+﻿<Window x:Class="FamilyFinance.View.MainView.ExpensesDialogWindow.ExpenseEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:localViewModel="clr-namespace:FamilyFinance.ViewModel.MainVM.ExpensesDialogWindowVM"
+        xmlns:local="clr-namespace:FamilyFinance.View.MainView.ExpensesDialogWindow"
+        xmlns:controls="clr-namespace:FamilyFinance.Shared.Controls"
+        xmlns:validation="clr-namespace:FamilyFinance.Shared.ValidationRules"
+        xmlns:extensions ="clr-namespace:FamilyFinance.Shared.Controls.Extensions"
+        xmlns:w="clr-namespace:FamilyFinance.View.MainView.ExpensesDialogWindow"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        d:DataContext="{d:DesignInstance Type=localViewModel:ExpenseEditWindowVM}"
+        mc:Ignorable="d"
+        Title="Расход" Height="600" Width="550" FontSize="14" SizeToContent="Height" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/FamilyFinance;component/FFResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.Style>
+        <Style TargetType="{x:Type w:ExpenseEditWindow}">
+            <Setter Property="InteractionResult"
+                    Value="{Binding UpdateResult}"/>
+        </Style>
+    </Window.Style>
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="Auto"/>
+            
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="auto"/>
+
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0 0 0 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Категория расхода" Grid.Row="0" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                <ComboBox x:Name="Category"
+                          IsEditable="True"
+                          ItemsSource="{Binding Categories}"
+                          DisplayMemberPath="Name"
+                          SelectedValuePath="Id"
+                          Validation.ErrorTemplate="{StaticResource FFValidationFailed}" 
+                          Style="{StaticResource FFComboBox}"
+                          extensions:ValidationBehavior.HasError="{Binding HasErrorsCategories}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding ChangeCategoryCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ComboBox.SelectedValue>
+                        <Binding Path="TempExpense.CategoryExpenseId" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <validation:ComboBoxItemNotNullValidationRule ValidatesOnTargetUpdated="True" ErrorMessage="Обязательное поле"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </ComboBox.SelectedValue>
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+                <TextBlock Text="Подкатегория" Grid.Row="0" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                <ComboBox x:Name="SubCategory"
+                          IsEditable="True"
+                          ItemsSource="{Binding SubCategory}"
+                          DisplayMemberPath="Name"
+                          SelectedValuePath="Id"
+                          SelectedValue="{Binding TempExpense.SubCategoryExpenseId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Validation.ErrorTemplate="{StaticResource FFValidationFailed}" 
+                          Style="{StaticResource FFComboBox}">
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+        <Separator Grid.Row="1" Style="{StaticResource FFSeparator}"/>
+
+        <Grid Grid.Row="2" Margin="0 0 0 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Дата" Grid.Row="0" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                <DatePicker IsEnabled="{Binding IsCreateMode}"
+                            Validation.ErrorTemplate="{StaticResource FFValidationFailed}"
+                            extensions:ValidationBehavior.HasError="{Binding HasErrorsDate}">
+                    <DatePicker.SelectedDate>
+                        <Binding Path="SelectedDay" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <validation:ComboBoxItemNotNullValidationRule ValidatesOnTargetUpdated="True" ErrorMessage="Обязательное поле"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </DatePicker.SelectedDate>
+                </DatePicker>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+                <TextBlock Text="Время" Grid.Row="0" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                <controls:TimePicker Format="HoursMinutes" 
+                                     IsEnabled="{Binding IsCreateMode}"
+                                     Value="{Binding SelectedTime}" 
+                                     Style="{StaticResource FFTimePickerStyle}"/>
+            </StackPanel>
+        </Grid>
+        <Separator Grid.Row="3" Style="{StaticResource FFSeparator}"/>
+
+        <TextBlock Text="Счет списания" Grid.Row="4" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+        <ComboBox Grid.Row="5" x:Name="CheckCB" Margin="0 0 0 10"
+                                  IsEnabled="{Binding IsCreateMode}"
+                                  ItemsSource="{Binding Checks}"
+                                  DisplayMemberPath="PresentName"
+                                  Validation.ErrorTemplate="{StaticResource FFValidationFailed}" 
+                                  Style="{StaticResource FFComboBox}"
+                                  extensions:ValidationBehavior.HasError="{Binding HasErrorsCheck}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding ChangeCheckCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <ComboBox.SelectedItem>
+                <Binding Path="SelectedCheck" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <validation:ComboBoxItemNotNullValidationRule ValidatesOnTargetUpdated="True" ErrorMessage="Выберите счет списания"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </ComboBox.SelectedItem>
+        </ComboBox>
+        <Separator Grid.Row="6" Style="{StaticResource FFSeparator}"/>
+
+        <Grid Grid.Row="7" Margin="0 0 0 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Сумма" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                <controls:DecimalUpDown DecimalPlaces="2"
+                                        MinValue="0" 
+                                        MaxValue="{Binding MaxTransferSumm}"
+                                        Value="{Binding TempExpense.SpentMoney}"
+                                        Style="{StaticResource FFNumericUpDown}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+                <TextBlock Text="Валюта"  Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                <TextBox Text="{Binding SelectedCheck.CurrencyRate.CurrencyStringCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" IsEnabled="False" Background="#E9ECEF" Style="{StaticResource FFTextBox}"/>
+            </StackPanel>
+        </Grid>
+        <Separator Grid.Row="8" Style="{StaticResource FFSeparator}"/>
+
+        <TextBlock Grid.Row="9" Text="Комментарий" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+        <TextBox Margin="0 0 0 10" Grid.Row="10" Text="{Binding TempExpense.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FFTextArea}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="TextChanged">
+                    <i:InvokeCommandAction Command="{Binding ChangeDataCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </TextBox>
+        <Separator Grid.Row="11" Style="{StaticResource FFSeparator}"/>
+
+        <Grid Grid.Row="12" Margin="0 10 0 0" Grid.IsSharedSizeScope="True" VerticalAlignment="Bottom">
+            <Grid HorizontalAlignment="Right">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="A"/>
+                    <ColumnDefinition SharedSizeGroup="A"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="BtnSave" Grid.Column="0" Margin="0 0 10 0" Content="Сохранить" Command="{Binding SaveExpenseCommand}" Style="{StaticResource FFButton}"/>
+                <Button x:Name="BtnCancel" Grid.Column="1" Margin="10 0 0 0" Command="{Binding CancelExpenseCommand}" Style="{StaticResource FFButtonCancel}" Content="Отмена"/>
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Window>

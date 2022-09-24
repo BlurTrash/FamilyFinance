@@ -170,7 +170,7 @@
                                                 <ColumnDefinition/>
                                                 <ColumnDefinition Width="auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <controls:WatermarkTextBox Grid.Column="0" Watermark="Введите подкатегорию" Height="34" Margin="10 0 0 0" Text="{Binding SubCategoryName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FFWatermarkTextBox}"/>
+                                            <controls:WatermarkTextBox Grid.Column="0" FontWeight="Normal" Watermark="Введите подкатегорию" Height="34" Margin="10 0 0 0" Text="{Binding SubCategoryName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FFWatermarkTextBox}"/>
                                             <controls:FFButton Grid.Column="1" Icon="None" Content="Добавить" Height="34" Margin="10" Command="{Binding AddSubCategoryCommand}"/>
                                         </Grid>
                                     </Grid>
@@ -328,7 +328,7 @@
                                                 <ColumnDefinition/>
                                                 <ColumnDefinition Width="auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <controls:WatermarkTextBox Grid.Column="0" Watermark="Введите подкатегорию" Height="34" Margin="10 0 0 0" Text="{Binding SubCategoryExpenseName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FFWatermarkTextBox}"/>
+                                            <controls:WatermarkTextBox Grid.Column="0" FontWeight="Normal" Watermark="Введите подкатегорию" Height="34" Margin="10 0 0 0" Text="{Binding SubCategoryExpenseName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FFWatermarkTextBox}"/>
                                             <controls:FFButton Grid.Column="1" Icon="None" Content="Добавить" Height="34" Margin="10" Command="{Binding AddSubCategoryExpenseCommand}"/>
                                         </Grid>
                                     </Grid>

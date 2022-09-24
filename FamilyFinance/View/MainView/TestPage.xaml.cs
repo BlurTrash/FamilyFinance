@@ -96,7 +96,7 @@ namespace FamilyFinance.View.MainView
         {
             Func<Client, Task> manipulatonDataMethod = async (client) =>
             {
-                var result = await client.ApiCurrencyGetAsync();
+                var result = await client.ApiCurrencyGetAllAsync();
                 RatesList = new ObservableCollection<CurrencyRate>(result);
             };
 
