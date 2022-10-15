@@ -6,6 +6,10 @@
                     xmlns:converters="clr-namespace:FamilyFinance.Shared.Converters"
                     xmlns:conv="clr-namespace:FamilyFinance.Core.Converters"
                     xmlns:prim="clr-namespace:FamilyFinance.Shared.Controls.Primitives">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/FamilyFinance;component/Themes/Icons.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
     <!--Конверторы-->
     <conv:CornerRadiusConverter x:Key="CornerRadiusConverter" x:Shared="False"/>
 
@@ -29,9 +33,9 @@
     <SolidColorBrush x:Key="HeaderBrush" Color="#F8F9FA"/>
     <SolidColorBrush x:Key="ButtonBrush" Color="#3B82F6"/>
     <SolidColorBrush x:Key="CaptionBrush" Color="#6C757D"/>
-    <!--<SolidColorBrush x:Key="TextBrush" Color="#495057"/>-->
+   
     <SolidColorBrush x:Key="WindowBrush" Color="#eff3f8"/>
-    <!--поменять название l - нижний регистр-->
+   
     <SolidColorBrush x:Key="HighLightBrush" Color="#EFF6FF"/>
     <SolidColorBrush x:Key="HighLightBorderBrush" Color="#BFDBFE"/>
     <SolidColorBrush x:Key="HighLightTextBrush" Color="#1D4ED8"/>
@@ -53,12 +57,11 @@
 
     <!--#region DataGrid -->
     <Style TargetType="DataGridCell">
-        <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
-
-        <Setter Property="Padding" Value="11"/>
-
+        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -66,7 +69,7 @@
                     <Border Padding="{TemplateBinding Padding}" BorderBrush="{TemplateBinding BorderBrush}" 
                             BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" 
                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
-                        <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
+                        <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -83,11 +86,11 @@
     <Style TargetType="DataGridColumnHeader">
         <Setter Property="Background" Value="{StaticResource HeaderBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
-        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="BorderThickness" Value="0,0,1,1"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Foreground" Value="{StaticResource HeaderTextBrush}"/>
-
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="Padding" Value="11"/>
 
         <Setter Property="Template">
@@ -123,7 +126,7 @@
     <Style TargetType="DataGrid">
         <Setter Property="Background" Value="{StaticResource ControlBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
-        <Setter Property="BorderThickness" Value="0,1"/>
+        <Setter Property="BorderThickness" Value="1, 1, 1, 1"/>
 
         <Setter Property="HeadersVisibility" Value="Column"/>
 
@@ -214,7 +217,7 @@
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Background" Value="{StaticResource ButtonBrush}"/>
         <Setter Property="MinHeight" Value="33"/>
-        <Setter Property="Padding" Value="10 5"/>
+        <Setter Property="Padding" Value="10 0"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
@@ -227,8 +230,8 @@
                     </ControlTemplate.Resources>
                     <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
                         <ContentPresenter Margin="{TemplateBinding Padding}"
-                                                                   HorizontalAlignment="Center"
-                                                                   VerticalAlignment="Center"
+                                                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                                    RecognizesAccessKey="True"/>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -345,7 +348,7 @@
     <Style TargetType="{x:Type controls:FFButton}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="Icon" Value="Plus"/>
-        <Setter Property="Padding" Value="14, 8"/>
+        <Setter Property="Padding" Value="14, 0"/>
         <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
         <Setter Property="BorderThickness" Value="1,1,1,1"/>
@@ -562,8 +565,10 @@
                         <Trigger Property="Validation.HasError" Value="True">
                             <Setter Property="BorderBrush" Value="{StaticResource ErrorBrush}"/>
                             <Setter Property="BorderThickness" Value="1"/>
-                            <!--<Setter TargetName="borderOwner" Property="Visibility" Value="Visible"/>
-                            <Setter TargetName="borderOwner" Property="BorderBrush" Value="{StaticResource ErrorBrush}"/>-->
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.6"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -696,12 +701,12 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <DatePickerTextBox x:Name="TextBox" Grid.Column="0" Validation.ErrorTemplate="{StaticResource FFValidationFailed}">
+                        <DatePickerTextBox x:Name="TextBox" BorderBrush="{StaticResource BorderBrush}" Grid.Column="0" Validation.ErrorTemplate="{StaticResource FFValidationFailed}">
                             <DatePickerTextBox.Template>
                                 <ControlTemplate TargetType="DatePickerTextBox">
                                     <TextBox x:Name="PART_TextBox" Text="{Binding Path=SelectedDate,
                                                 RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}, Converter={StaticResource DateConverter}}" 
-                                             Style="{StaticResource FFTextBox}">
+                                             Style="{StaticResource FFTextBox}" BorderBrush="{TemplateBinding BorderBrush}">
                                         <TextBox.Resources>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="CornerRadius" Value="5,0,0,5"/>
@@ -731,18 +736,14 @@
                         </Popup>
                     </Grid>
 
-                    <!--Не работает-->
-                    <!--<ControlTemplate.Triggers>
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding ElementName=PART_TextBox, Path=IsFocused}" Value="True"/>
-                                <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.HasError)}" Value="True"/>
-                            </MultiDataTrigger.Conditions>
-                            <MultiDataTrigger.Setters>
-                                <Setter TargetName="TextBox" Property="BorderBrush" Value="{StaticResource ErrorBrush}"></Setter>
-                            </MultiDataTrigger.Setters>
-                        </MultiDataTrigger>
-                    </ControlTemplate.Triggers>-->
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Validation.HasError" Value="True">
+                            <Setter TargetName="TextBox" Property="BorderBrush" Value="{StaticResource ErrorBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -2112,12 +2113,12 @@
                         <TextBox x:Name="PART_TextBox" Grid.Column="0" Style="{StaticResource FFTextBox}">
                             <TextBox.Resources>
                                 <Style TargetType="{x:Type Border}">
-                                    <Setter Property="CornerRadius" Value="4 0 0 4"/>
+                                    <Setter Property="CornerRadius" Value="5 0 0 5"/>
                                 </Style>
                             </TextBox.Resources>
                         </TextBox>
 
-                        <ToggleButton x:Name="PART_ToggleButton"
+                        <ToggleButton x:Name="PART_ToggleButton" Padding="5 0"
                                       Grid.Column="1"
                                       IsChecked="{Binding IsOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
                                       Style="{StaticResource FFToggleButton}">
@@ -2144,7 +2145,7 @@
                                   MaxHeight="200">
                                 <Border
                                         x:Name="DropDownBorder"
-                                        CornerRadius="4"
+                                        CornerRadius="5"
                                         BorderThickness="0"
                                         Background="White">
                                     <Border.Effect>
@@ -2154,17 +2155,108 @@
                                                           BorderThickness="0" Foreground="{StaticResource TextBrush}"
                                                           Padding="0 20"
                                                           VerticalAlignment="Center"
-                                                          HorizontalAlignment="Center"></controls:TimeSpanUpDown>
+                                                          HorizontalAlignment="Center"
+                                                          SecondsVisibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SecondsVisibility}"
+                                                          DaysVisibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DaysVisibility}"/>
                                 </Border>
                             </Grid>
                         </Popup>
 
                     </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
     <!--#endregion-->
 
-    
+    <!--#region ProgressBar -->
+    <Style x:Key="FFProgressBar" TargetType="{x:Type ProgressBar}">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Height" Value="15"/>
+        <Setter Property="Background" Value="{StaticResource ButtonBrush}"/>
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="Padding" Value="5,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ProgressBar}">
+                    <Grid Background="#00000000">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Determinate"/>
+                                <VisualState x:Name="Indeterminate">
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <PointAnimationUsingKeyFrames Storyboard.TargetName="Animation" Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)">
+                                            <EasingPointKeyFrame KeyTime="0:0:0" Value="0.5,0.5"/>
+                                            <EasingPointKeyFrame KeyTime="0:0:1.5" Value="1.95,0.5"/>
+                                            <EasingPointKeyFrame KeyTime="0:0:3" Value="0.5,0.5"/>
+                                        </PointAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Grid Height="{TemplateBinding Height}">
+                            <Border Background="#000000" CornerRadius="7.5" Opacity="0.05"/>
+                            <Border BorderBrush="#000000" BorderThickness="1" CornerRadius="7.5" Opacity="0.1"/>
+                            <Grid Margin="{TemplateBinding BorderThickness}">
+                                <Border x:Name="PART_Track"/>
+                                <Grid x:Name="PART_Indicator" ClipToBounds="True" HorizontalAlignment="Left" >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition x:Name="width1"/>
+                                        <ColumnDefinition x:Name="width2" Width="0"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid x:Name="Animation" RenderTransformOrigin="0.5,0.5">
+                                        <Grid.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleY="-1" ScaleX="1"/>
+                                                <SkewTransform AngleY="0" AngleX="0"/>
+                                                <RotateTransform Angle="180"/>
+                                                <TranslateTransform/>
+                                            </TransformGroup>
+                                        </Grid.RenderTransform>
+                                        <Border Background="{TemplateBinding Background}" CornerRadius="7.5">
+                                            <Viewbox HorizontalAlignment="Left" StretchDirection="DownOnly" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                                                <TextBlock Foreground="#ffffff" SnapsToDevicePixels="True" FontSize="{TemplateBinding FontSize}" VerticalAlignment="Center" Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Value,StringFormat={}{0}%}" RenderTransformOrigin="0.5,0.5">
+                                                    <TextBlock.RenderTransform>
+                                                        <TransformGroup>
+                                                            <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                                                            <SkewTransform AngleY="0" AngleX="0"/>
+                                                            <RotateTransform Angle="0"/>
+                                                            <TranslateTransform/>
+                                                        </TransformGroup>
+                                                    </TextBlock.RenderTransform>
+                                                </TextBlock>
+                                            </Viewbox>
+                                        </Border>
+                                        <Border BorderBrush="#000000" BorderThickness="1" CornerRadius="7.5" Opacity="0.1"/>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="#c5c5c5"/>
+                        </Trigger>
+                        <Trigger Property="IsIndeterminate" Value="true">
+                            <Setter TargetName="width1" Property="Width" Value="0.25*"/>
+                            <Setter TargetName="width2" Property="Width" Value="0.725*"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion-->
+
 </ResourceDictionary>
