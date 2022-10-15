@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Media\Image\MainIcon.png" />
+    <None Remove="Media\Image\MainIconV2.png" />
+    <None Remove="Themes\Fonts\primeicons.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LiveCharts.Wpf.Core" Version="0.9.8" />
     <PackageReference Include="MaterialDesignThemes" Version="4.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.16" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
@@ -14,7 +21,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Shared\Controls\MultiSelectComboBox\Themes\" />
+    <Resource Include="Media\Image\MainIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Media\Image\MainIconV2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Themes\Fonts\primeicons.ttf" />
   </ItemGroup>
 
 </Project>
