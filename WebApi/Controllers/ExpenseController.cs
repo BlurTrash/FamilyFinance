@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Core.Authorization;
 using WebApi.Database.Models;
+using WebApi.Models;
 
 namespace WebApi.Controllers
 {
@@ -68,7 +69,9 @@ namespace WebApi.Controllers
                 .Where(e => e.UserId == userId)
                 .Include(e => e.CategoryExpense)
                 .Include(e => e.SubCategoryExpense)
-                .Include(e => e.Check);
+                .Include(e => e.Check)
+                .ThenInclude(c => c.CurrencyRate)
+                .ToList();
 
             if (expenseCollection == null)
             {
@@ -96,7 +99,9 @@ namespace WebApi.Controllers
                     .Where(e => e.UserId == user.Id && (e.Date.Month == date.Month && e.Date.Year == date.Year))
                     .Include(e => e.CategoryExpense)
                     .Include(e => e.SubCategoryExpense)
-                    .Include(e => e.Check);
+                    .Include(e => e.Check)
+                    .ThenInclude(c => c.CurrencyRate)
+                    .ToList();
 
                 if (expenseCollection == null)
                 {
@@ -129,7 +134,9 @@ namespace WebApi.Controllers
                     .Where(e => e.UserId == user.Id && e.Date.Year == date.Year)
                     .Include(e => e.CategoryExpense)
                     .Include(e => e.SubCategoryExpense)
-                    .Include(e => e.Check);
+                    .Include(e => e.Check)
+                    .ThenInclude(c => c.CurrencyRate)
+                    .ToList();
 
                 if (expenseCollection == null)
                 {
@@ -162,7 +169,9 @@ namespace WebApi.Controllers
                     .Where(e => e.UserId == user.Id && (e.Date.Day == date.Day && e.Date.Month == date.Month && e.Date.Year == date.Year))
                     .Include(e => e.CategoryExpense)
                     .Include(e => e.SubCategoryExpense)
-                    .Include(e => e.Check);
+                    .Include(e => e.Check)
+                    .ThenInclude(c => c.CurrencyRate)
+                    .ToList();
 
                 if (expenseCollection == null)
                 {
@@ -193,10 +202,28 @@ namespace WebApi.Controllers
 
                 expense.UserId = user.Id;
 
-                db.Expenses.Add(expense);
-                db.SaveChanges();
+                try
+                {
+                    using (var transaction = db.Database.BeginTransaction())
+                    {
+                        var userCheck = db.Checks.FirstOrDefault(c => c.Id == expense.CheckId);
+                        userCheck.Amount -= expense.SpentMoney;
 
-                return Get(expense.Id);
+                        db.Checks.Update(userCheck);
+                        db.SaveChanges();
+
+                        db.Expenses.Add(expense);
+                        db.SaveChanges();
+
+                        transaction.Commit();
+
+                        return Get(expense.Id);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.InnerException?.Message);
+                }
             }
             catch (Exception ex)
             {
@@ -242,16 +269,148 @@ namespace WebApi.Controllers
         {
             try
             {
-                var expense = db.Expenses.FirstOrDefault(e => e.Id == id);
-                if (expense == null)
+                using (var transaction = db.Database.BeginTransaction())
                 {
-                    return NotFound($"Счет не найден.");
+                    var expense = db.Expenses.Include(e => e.Check)
+                        .ThenInclude(c => c.CurrencyRate)
+                        .FirstOrDefault(e => e.Id == id);
+                  
+                    if (expense == null)
+                    {
+                        return NotFound($"Расход не найден.");
+                    }
+
+                    var userCheck = db.Checks.FirstOrDefault(c => c.Id == expense.CheckId);
+
+                    userCheck.Amount += expense.SpentMoney;
+
+                    db.Checks.Update(userCheck);
+                    db.SaveChanges();
+
+                    db.Expenses.Remove(expense);
+                    db.SaveChanges();
+
+                    transaction.Commit();
+
+                    return Ok(expense);
                 }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException?.Message);
+            }
+        }
 
-                db.Expenses.Remove(expense);
-                db.SaveChanges();
+        // GET api/<ExpenseController>/5
+        /// <summary>
+        /// Возвращает: Топ-5 расходов по дню
+        /// </summary>
+        [HttpGet("{date}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        [Authorize]
+        public ActionResult<IEnumerable<ExpenseDetails>> GetTopFiveExpenseByDay(DateTime date)
+        {
+            try
+            {
+                User user = HttpContext.User.CurrentUser();
 
-                return Ok(expense);
+                var expenseCollection = (IEnumerable<Expense>)db.Expenses
+                   .Where(e => e.UserId == user.Id && (e.Date.Day == date.Day && e.Date.Month == date.Month && e.Date.Year == date.Year))
+                   .Include(e => e.CategoryExpense)
+                   .Include(e => e.SubCategoryExpense)
+                   .Include(e => e.Check)
+                   .ThenInclude(c => c.CurrencyRate)
+                   .ToList();
+
+                var totalAmount = expenseCollection.Sum(e => e.SpentMoney * e.Check.CurrencyRate.ExchangeRate);
+
+                var groupCollection = expenseCollection.GroupBy(e => e.CategoryExpense.Name);
+
+                var expenseDetailsCollection = groupCollection.Select(c => new ExpenseDetails { ExpenseCategoryName = c.Key, Summ = Decimal.Round(c.Sum(ex => ex.SpentMoney * ex.Check.CurrencyRate.ExchangeRate)), Persent = (double)Decimal.Round(c.Sum(ex => ex.SpentMoney * ex.Check.CurrencyRate.ExchangeRate) / totalAmount * 100) }).ToList();
+
+                var topFiveExpenseDetails = expenseDetailsCollection.OrderByDescending(e => e.Summ).Take(5).OrderBy(e => e.ExpenseCategoryName).ToList();
+
+                return Ok(topFiveExpenseDetails);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException?.Message);
+            }
+        }
+
+        // GET api/<ExpenseController>/5
+        /// <summary>
+        /// Возвращает: Топ-5 расходов по месяцу
+        /// </summary>
+        [HttpGet("{date}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        [Authorize]
+        public ActionResult<IEnumerable<ExpenseDetails>> GetTopFiveExpenseByMonth(DateTime date)
+        {
+            try
+            {
+                User user = HttpContext.User.CurrentUser();
+
+                var expenseCollection = (IEnumerable<Expense>)db.Expenses
+                    .Where(e => e.UserId == user.Id && (e.Date.Month == date.Month && e.Date.Year == date.Year))
+                    .Include(e => e.CategoryExpense)
+                    .Include(e => e.SubCategoryExpense)
+                    .Include(e => e.Check)
+                    .ThenInclude(c => c.CurrencyRate)
+                    .ToList();
+
+                var totalAmount = expenseCollection.Sum(e => e.SpentMoney * e.Check.CurrencyRate.ExchangeRate);
+
+                var groupCollection = expenseCollection.GroupBy(e => e.CategoryExpense.Name);
+
+                var expenseDetailsCollection = groupCollection.Select(c => new ExpenseDetails { ExpenseCategoryName = c.Key, Summ = Decimal.Round(c.Sum(ex => ex.SpentMoney * ex.Check.CurrencyRate.ExchangeRate)), Persent = (double)Decimal.Round(c.Sum(ex => ex.SpentMoney * ex.Check.CurrencyRate.ExchangeRate) / totalAmount * 100) }).ToList();
+
+                var topFiveExpenseDetails = expenseDetailsCollection.OrderByDescending(e => e.Summ).Take(5).OrderBy(e => e.ExpenseCategoryName).ToList();
+
+                return Ok(topFiveExpenseDetails);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException?.Message);
+            }
+        }
+
+        // GET api/<ExpenseController>/5
+        /// <summary>
+        /// Возвращает: Топ-5 расходов по году
+        /// </summary>
+        [HttpGet("{date}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        [Authorize]
+        public ActionResult<IEnumerable<ExpenseDetails>> GetTopFiveExpenseByYear(DateTime date)
+        {
+            try
+            {
+                User user = HttpContext.User.CurrentUser();
+
+                var expenseCollection = (IEnumerable<Expense>)db.Expenses
+                      .Where(e => e.UserId == user.Id && e.Date.Year == date.Year)
+                      .Include(e => e.CategoryExpense)
+                      .Include(e => e.SubCategoryExpense)
+                      .Include(e => e.Check)
+                      .ThenInclude(c => c.CurrencyRate)
+                      .ToList();
+
+                var totalAmount = expenseCollection.Sum(e => e.SpentMoney * e.Check.CurrencyRate.ExchangeRate);
+
+                var groupCollection = expenseCollection.GroupBy(e => e.CategoryExpense.Name);
+
+                var expenseDetailsCollection = groupCollection.Select(c => new ExpenseDetails { ExpenseCategoryName = c.Key, Summ = Decimal.Round(c.Sum(ex => ex.SpentMoney * ex.Check.CurrencyRate.ExchangeRate)), Persent = (double)Decimal.Round(c.Sum(ex => ex.SpentMoney * ex.Check.CurrencyRate.ExchangeRate) / totalAmount * 100) }).ToList();
+
+                var topFiveExpenseDetails = expenseDetailsCollection.OrderByDescending(e => e.Summ).Take(5).OrderBy(e => e.ExpenseCategoryName).ToList();
+
+                return Ok(topFiveExpenseDetails);
             }
             catch (Exception ex)
             {

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Core.Authorization;
 using WebApi.Database.Models;
+using WebApi.Models;
 
 namespace WebApi.Controllers
 {
@@ -213,6 +214,37 @@ namespace WebApi.Controllers
                 {
                     return NotFound($"Счет не найден.");
                 }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException?.Message);
+            }
+        }
+
+        // GET api/<CheckController>/5
+        /// <summary>
+        /// Возвращает: Топ-5 остатков на счетах
+        /// </summary>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        [Authorize]
+        public ActionResult<IEnumerable<CheckDetails>> GetTopFiveCheckBalances()
+        {
+            try
+            {
+                User user = HttpContext.User.CurrentUser();
+
+                var checks = db.Checks.Where(c => c.UserId == user.Id).Include(c => c.CurrencyRate).ToList();
+
+                var totalAmount = checks.Sum(c => c.Amount * c.CurrencyRate.ExchangeRate);
+
+                var topFiveChecks = checks.OrderByDescending(c => c.Amount * c.CurrencyRate.ExchangeRate).Take(5).OrderBy(c => c.Name).ToList();
+
+                var checksDetailsCollection = topFiveChecks.Select(c => new CheckDetails { CheckName = c.Name, CurrencyStringCode = c.CurrencyRate.CurrencyStringCode, Summ = Decimal.Round(c.Amount), Persent = (double)Decimal.Round(c.Amount * c.CurrencyRate.ExchangeRate / totalAmount * 100) }).ToList();
+
+                return Ok(checksDetailsCollection);
             }
             catch (Exception ex)
             {
