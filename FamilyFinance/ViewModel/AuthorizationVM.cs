@@ -45,6 +45,9 @@ namespace FamilyFinance.ViewModel
             }
         }
 
+        //свойство видимости для спиннера
+        public bool IsLoading { get; set; } = false;
+
         //поля ввода
         public string FamilyLogin
         {
@@ -132,6 +135,8 @@ namespace FamilyFinance.ViewModel
         //проверка авторизации данных, если все совпадает то переходим на новую страницу, если нет уведомляем пользователя
         private async void OnAuthorization(object parametr)
         {
+            IsLoading = true;
+
             var passwordBox = parametr as PasswordBox;
             _password = passwordBox.Password;
 
@@ -161,18 +166,22 @@ namespace FamilyFinance.ViewModel
                         await DataManager.UpdateFromServer();
                     };
 
-                    await ClientManager.ManipulatonData(manipulatonDataMethod1);
+                    var authResult = await ClientManager.ManipulatonData(manipulatonDataMethod1);
 
-                    MessageBox.Show($"Вход выполнен!");
+                    if (authResult == System.Net.HttpStatusCode.OK)
+                    {
+                        IsLoading = false;
+                        //MessageBox.Show($"Вход выполнен!");
 
-                    //_navPage.NavigationService.Navigate(new MainPage()); //test
+                        MainWindow mainWindow = new MainWindow();
+                        mainWindow.Show();
 
-                    MainWindow mainWindow = new MainWindow();
-                    mainWindow.Show();
-
-                    var currentWindow = Application.Current.MainWindow;
-                    currentWindow.Close();
+                        var currentWindow = Application.Current.MainWindow;
+                        currentWindow.Close();
+                    }
+                   
                 }
+                IsLoading = false;
             }
             catch (Exception ex)
             {
