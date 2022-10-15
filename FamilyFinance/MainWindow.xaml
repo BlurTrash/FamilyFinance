@@ -11,7 +11,7 @@
         xmlns:converters="clr-namespace:FamilyFinance.Core.Converters"
         d:DataContext="{d:DesignInstance Type=localViewModel:MainVM}"
         mc:Ignorable="d"
-        Title="FamilyFinance" Height="600" Width="1100">
+        Title="FamilyFinance" Height="800" Width="1300" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -35,9 +35,12 @@
                 </TabItem.Content>
             </TabItem>
 
-            <TabItem Name="doh" Header="Доходы">
+            <TabItem Name="Income" Header="Доходы">
                 <TabItem.Content>
-                    <TextBlock Text="Доходы"/>
+                    <Grid>
+                        <views:NonAuth Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource NonAuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource NonAuthVisibilityConverter}, Mode=OneWay}"/>
+                        <views:IncomePage Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource AuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource AuthVisibilityConverter}, Mode=OneWay}"/>
+                    </Grid>
                 </TabItem.Content>
             </TabItem>
 
@@ -59,9 +62,12 @@
                 </TabItem.Content>
             </TabItem>
 
-            <TabItem Name="Otchet" Header="Отчеты">
+            <TabItem Name="Reports" Header="Отчеты">
                 <TabItem.Content>
-                    <TextBlock Text="Отчеты"/>
+                    <Grid>
+                        <views:NonAuth Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource NonAuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource NonAuthVisibilityConverter}, Mode=OneWay}"/>
+                        <views:ReportsPage Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource AuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource AuthVisibilityConverter}, Mode=OneWay}"/>
+                    </Grid>
                 </TabItem.Content>
             </TabItem>
 
@@ -80,7 +86,7 @@
             <TabItem  Name="Nov" Header="Новости" >
                 <TabItem.Content>
                     <Grid>
-                        <views:TestPage Margin="10"/>
+                        <!--<views:TestPage Margin="10"/>-->
                     </Grid>
                 </TabItem.Content>
             </TabItem>
