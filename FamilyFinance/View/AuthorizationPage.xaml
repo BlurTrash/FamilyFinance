@@ -18,6 +18,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -27,17 +29,14 @@
                 <DropShadowEffect BlurRadius="30" Color="LightBlue" ShadowDepth="1"></DropShadowEffect>
             </Border.Effect>
             <StackPanel>
-                <TextBlock Text="Family Finance" FontSize="30" FontWeight="Bold" FontFamily="Times New Roman Italic" Margin="0 0 0 20" ></TextBlock>
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 15">
+                    <Image Source="/FamilyFinance;component/Media/Image/MainIconV2.png" Width="40" Height="40"/>
+                    <TextBlock Text="Family Finance" VerticalAlignment="Bottom" FontSize="20" Margin="15 0 0 0" Foreground="#495057" FontWeight="Medium" FontFamily="Roboto"  ></TextBlock>
+                </StackPanel>
                 <Grid Margin="0 0 0 20">
                     <Button x:Name="btnRegistration" HorizontalAlignment="Left" Content="Регистрация" Style="{StaticResource MaterialDesignFlatButton}" Click="btnRegistration_Click"></Button>
                     <Button x:Name="btnEnter" HorizontalAlignment="Right" Content="Вход"></Button>
                 </Grid>
-                <!--<TextBox x:Name="textBoxFamilyLogin" Text="{Binding FamilyLogin}" Background="{Binding FamilyLoginBrush}" ToolTip="{Binding FamilyLoginToolTip}" materialDesign:HintAssist.Hint="Семейный аккаунт" Style="{StaticResource MaterialDesignFloatingHintTextBox}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="GotFocus">
-                            <i:InvokeCommandAction Command="{Binding GotFocusCommand}"></i:InvokeCommandAction></i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </TextBox>-->
                 <TextBox x:Name="textBoxUserLogin" Text="{Binding UserLogin}" Background="{Binding UserLoginBrush}" ToolTip="{Binding UserLoginToolTip}" materialDesign:HintAssist.Hint="Логин пользователя" Style="{StaticResource MaterialDesignFloatingHintTextBox}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotFocus">
@@ -52,7 +51,43 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </PasswordBox>
-                <Button x:Name="btnRegisterEnter" Content="Войти" Margin="0 20" Command="{Binding AuthCommand}" CommandParameter="{Binding ElementName=passBox}"></Button>
+                <Button x:Name="btnRegisterEnter" Content="Войти" Margin="0 20" IsDefault="True" Command="{Binding AuthCommand}" CommandParameter="{Binding ElementName=passBox}"></Button>
+            </StackPanel>
+        </Border>
+
+        <Border d:Visibility="Hidden" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border.Background>
+                <SolidColorBrush Color="#000" Opacity="0.4"/>
+            </Border.Background>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Ellipse Width="100" Height="100" 
+                         Margin="0,0,0,10"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center"
+                         Stroke="#E5E5E5"
+                         StrokeThickness="4"
+                         StrokeDashArray="50,50"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.RenderTransform>
+                        <RotateTransform x:Name="MyAnimatedTransform" Angle="0"/>
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetName="MyAnimatedTransform"
+                                                 Storyboard.TargetProperty="(RotateTransform.Angle)"
+                                                 From="0"
+                                                 To="360"
+                                                 Duration="0:0:1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+                <TextBlock Text="Пожалуйста, подождите..."
+                           FontSize="16"
+                           Foreground="#E5E5E5"/>
             </StackPanel>
         </Border>
     </Grid>
