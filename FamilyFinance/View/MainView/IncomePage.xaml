@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="FamilyFinance.View.MainView.ExpensesPage"
+﻿<UserControl x:Class="FamilyFinance.View.MainView.IncomePage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,9 +9,9 @@
              xmlns:localViewModel="clr-namespace:FamilyFinance.ViewModel.MainVM"
              xmlns:converters="clr-namespace:FamilyFinance.Core.Converters"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             d:DataContext="{d:DesignInstance Type=localViewModel:ExpensesVM}"
+             d:DataContext="{d:DesignInstance Type=localViewModel:IncomeVM}"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="1100" FontSize="14" x:Name="ExpenseControl">
+             d:DesignHeight="600" d:DesignWidth="1100" FontSize="14" x:Name="IncomeControl">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -43,7 +43,7 @@
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Margin="20 0 0 0" VerticalAlignment="Center" Grid.Column="0" Text="Расходы: " Style="{StaticResource FFTextBlockTitle}"/>
+                <TextBlock Margin="20 0 0 0" VerticalAlignment="Center" Grid.Column="0" Text="Доходы: " Style="{StaticResource FFTextBlockTitle}"/>
                 <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding SelectedMonth, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FFTextBlockTitle}"/>
                 <TextBlock VerticalAlignment="Center" Grid.Column="4" Text="{Binding SelectedYear, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FFTextBlockTitle}"/>
                 <TextBlock VerticalAlignment="Center" Grid.Column="6" Text="г." Style="{StaticResource FFTextBlockTitle}"/>
@@ -68,7 +68,7 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <controls:FFButton Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Добавить" Height="34" Margin="0,0,40,0" Command="{Binding AddExpenseCommand}"/>
+                        <controls:FFButton Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Добавить" Height="34" Margin="0,0,40,0" Command="{Binding AddIncomeCommand}"/>
 
 
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -81,7 +81,7 @@
 
                                 <converters:DisplayNameConverter x:Key="displayNameConverter"/>
                             </StackPanel.Resources>
-                            
+
                             <TextBlock Text="Фильтр:" Margin="0 0 10 0" VerticalAlignment="Center" FontSize="16" Style="{StaticResource FFTextBlockTitleSmall}"/>
                             <ComboBox IsEditable="False"  
                                       Width="150"
@@ -163,18 +163,18 @@
                         </Grid.RowDefinitions>
                         <DataGrid AutoGenerateColumns="False" HorizontalScrollBarVisibility="Auto"
                               IsReadOnly="True" HorizontalAlignment="Left"
-                              ItemsSource="{Binding Expenses}" 
+                              ItemsSource="{Binding Incomes}" 
                               CanUserAddRows="False"
                               CanUserDeleteRows="False"
                               CanUserResizeColumns="False"
                               CanUserResizeRows="False">
                             <DataGrid.Columns>
-                                <DataGridTextColumn x:Name="ColumnCategory" Header="Категория" MinWidth="150" MaxWidth="300" Binding="{Binding CategoryExpense.Name}"/>
-                                <DataGridTextColumn x:Name="ColumnSubCategory" Header="Подкатегория"  MinWidth="200" MaxWidth="350" Binding="{Binding SubCategoryExpense.Name}"/>
+                                <DataGridTextColumn x:Name="ColumnCategory" Header="Категория" MinWidth="150" MaxWidth="300" Binding="{Binding Category.Name}"/>
+                                <DataGridTextColumn x:Name="ColumnSubCategory" Header="Подкатегория"  MinWidth="200" MaxWidth="350" Binding="{Binding SubCategory.Name}"/>
                                 <DataGridTextColumn x:Name="ColumnDate" Header="Дата" Width="auto" MinWidth="200" MaxWidth="350" Binding="{Binding Date}"/>
                                 <DataGridTextColumn x:Name="ColumnCheck" Header="Счет" MinWidth="200" MaxWidth="350" Binding="{Binding Check.Name}"/>
                                 <DataGridTextColumn x:Name="ColumnCurrencyStringCode" Header="Валюта" Width="auto" Binding="{Binding Check.CurrencyRate.CurrencyStringCode}"/>
-                                <DataGridTextColumn x:Name="ColumnAmount" Header="Сумма" MinWidth="150" MaxWidth="250" Width="auto" Binding="{Binding SpentMoney, StringFormat=F2}"/>
+                                <DataGridTextColumn x:Name="ColumnAmount" Header="Сумма" MinWidth="150" MaxWidth="250" Width="auto" Binding="{Binding ReplenishmentMoney, StringFormat=F2}"/>
                                 <DataGridTemplateColumn Width="auto">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -187,13 +187,13 @@
 
                                                 <Button x:Name="BtnEdit" Grid.Column="0" Height="25" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
                                                                 Content="{StaticResource Edit}" 
-                                                                Command="{Binding ElementName=ExpenseControl, Path=DataContext.EditExpenseCommand}" 
+                                                                Command="{Binding ElementName=IncomeControl, Path=DataContext.EditIncomeCommand}" 
                                                                 CommandParameter="{Binding}"
                                                                 Style="{StaticResource FFButtonEllipse}"/>
 
                                                 <Button x:Name="BtnDelete" Grid.Column="2" Height="25" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
                                                                 Content="{StaticResource Delete}"    
-                                                                Command="{Binding ElementName=ExpenseControl, Path=DataContext.DeleteExpenseCommand}" 
+                                                                Command="{Binding ElementName=IncomeControl, Path=DataContext.DeleteIncomeCommand}" 
                                                                 CommandParameter="{Binding}"
                                                                 Style="{StaticResource FFButtonEllipse}">
                                                 </Button>
@@ -205,8 +205,8 @@
                         </DataGrid>
 
                         <StackPanel Margin="0 10 0 0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                            <TextBlock Text="Всего потрачено:" VerticalAlignment="Center" FontSize="16" Grid.Row="0" Margin="0 0 10 0" Style="{StaticResource FFTextBlock}"/>
-                            <TextBox Width="200" HorizontalContentAlignment="Center" Text="{Binding ExpensesAmountSumm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:C}, ConverterCulture=ru-RU}" IsReadOnly="True" IsEnabled="False" Background="#E9ECEF" Style="{StaticResource FFTextBox}"/>
+                            <TextBlock Text="Всего начислено:" VerticalAlignment="Center" FontSize="16" Grid.Row="0" Margin="0 0 10 0" Style="{StaticResource FFTextBlock}"/>
+                            <TextBox Width="200" HorizontalContentAlignment="Center" Text="{Binding IncomesAmountSumm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:C}, ConverterCulture=ru-RU}" IsReadOnly="True" IsEnabled="False" Background="#E9ECEF" Style="{StaticResource FFTextBox}"/>
                         </StackPanel>
                     </Grid>
 
@@ -228,7 +228,7 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock FontWeight="Bold" HorizontalAlignment="Center" Margin="0 5" Text="TOP-5 Расходов" Grid.Row="0"  Style="{StaticResource FFTextBlock}"/>
+                            <TextBlock FontWeight="Bold" HorizontalAlignment="Center" Margin="0 5" Text="TOP-5 Доходов" Grid.Row="0"  Style="{StaticResource FFTextBlock}"/>
 
                             <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
                                 <ItemsControl ItemsSource="{Binding TopFiveCategories}">
@@ -240,7 +240,7 @@
                                                     <RowDefinition/>
                                                 </Grid.RowDefinitions>
                                                 <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                                    <TextBlock Text="{Binding ExpenseCategoryName}"/>
+                                                    <TextBlock Text="{Binding IncomeCategoryName}"/>
                                                     <TextBlock Text=", "/>
                                                     <TextBlock Text="{Binding Summ}"/>
                                                 </StackPanel>
@@ -291,7 +291,7 @@
                         </Grid>
                     </Border>
                 </Grid>
-                
+
             </Grid>
         </Border>
     </Grid>

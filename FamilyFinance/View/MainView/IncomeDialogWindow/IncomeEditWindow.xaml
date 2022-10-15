@@ -1,18 +1,18 @@
-﻿<Window x:Class="FamilyFinance.View.MainView.ExpensesDialogWindow.ExpenseEditWindow"
+﻿<Window x:Class="FamilyFinance.View.MainView.IncomeDialogWindow.IncomeEditWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:localViewModel="clr-namespace:FamilyFinance.ViewModel.MainVM.ExpensesDialogWindowVM"
-        xmlns:local="clr-namespace:FamilyFinance.View.MainView.ExpensesDialogWindow"
+        xmlns:localViewModel="clr-namespace:FamilyFinance.ViewModel.MainVM.IncomeDialogWindowVM"
+        xmlns:local="clr-namespace:FamilyFinance.View.MainView.IncomeDialogWindow"
         xmlns:controls="clr-namespace:FamilyFinance.Shared.Controls"
         xmlns:validation="clr-namespace:FamilyFinance.Shared.ValidationRules"
         xmlns:extensions ="clr-namespace:FamilyFinance.Shared.Controls.Extensions"
-        xmlns:w="clr-namespace:FamilyFinance.View.MainView.ExpensesDialogWindow"
+        xmlns:w="clr-namespace:FamilyFinance.View.MainView.IncomeDialogWindow"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        d:DataContext="{d:DesignInstance Type=localViewModel:ExpenseEditWindowVM}"
+        d:DataContext="{d:DesignInstance Type=localViewModel:IncomeEditWindowVM}"
         mc:Ignorable="d"
-        Title="Расход" Height="600" Width="550" FontSize="14" SizeToContent="Height" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Доход" Height="600" Width="550" FontSize="14" SizeToContent="Height" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,24 +21,24 @@
         </ResourceDictionary>
     </Window.Resources>
     <Window.Style>
-        <Style TargetType="{x:Type w:ExpenseEditWindow}">
+        <Style TargetType="{x:Type w:IncomeEditWindow}">
             <Setter Property="InteractionResult"
                     Value="{Binding UpdateResult}"/>
         </Style>
     </Window.Style>
-    
+
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            
+
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            
+
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="Auto"/>
-            
+
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
 
@@ -57,7 +57,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0">
-                <TextBlock Text="Категория расхода" Grid.Row="0" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+                <TextBlock Text="Категория дохода" Grid.Row="0" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
                 <ComboBox x:Name="Category"
                           IsEditable="True"
                           ItemsSource="{Binding Categories}"
@@ -72,7 +72,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <ComboBox.SelectedValue>
-                        <Binding Path="TempExpense.CategoryExpenseId" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                        <Binding Path="TempIncome.CategoryId" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
                                 <validation:ComboBoxItemNotNullValidationRule ValidatesOnTargetUpdated="True" ErrorMessage="Обязательное поле"/>
                             </Binding.ValidationRules>
@@ -88,7 +88,7 @@
                           ItemsSource="{Binding SubCategory}"
                           DisplayMemberPath="Name"
                           SelectedValuePath="Id"
-                          SelectedValue="{Binding TempExpense.SubCategoryExpenseId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedValue="{Binding TempIncome.SubCategoryId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Validation.ErrorTemplate="{StaticResource FFValidationFailed}" 
                           Style="{StaticResource FFComboBox}">
                 </ComboBox>
@@ -128,7 +128,7 @@
         </Grid>
         <Separator Grid.Row="3" Style="{StaticResource FFSeparator}"/>
 
-        <TextBlock Text="Счет списания" Grid.Row="4" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
+        <TextBlock Text="Счет пополнения" Grid.Row="4" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
         <ComboBox Grid.Row="5" x:Name="CheckCB" Margin="0 0 0 10"
                                   IsEnabled="{Binding IsCreateMode}"
                                   ItemsSource="{Binding Checks}"
@@ -144,7 +144,7 @@
             <ComboBox.SelectedItem>
                 <Binding Path="SelectedCheck" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <validation:ComboBoxItemNotNullValidationRule ValidatesOnTargetUpdated="True" ErrorMessage="Выберите счет списания"/>
+                        <validation:ComboBoxItemNotNullValidationRule ValidatesOnTargetUpdated="True" ErrorMessage="Выберите счет пополнения"/>
                     </Binding.ValidationRules>
                 </Binding>
             </ComboBox.SelectedItem>
@@ -163,7 +163,7 @@
                 <controls:DecimalUpDown DecimalPlaces="2"
                                         MinValue="0" 
                                         MaxValue="{Binding MaxTransferSumm}"
-                                        Value="{Binding TempExpense.SpentMoney}"
+                                        Value="{Binding TempIncome.ReplenishmentMoney}"
                                         Style="{StaticResource FFNumericUpDown}"
                                         IsEnabled="{Binding IsCreateMode}"/>
             </StackPanel>
@@ -176,7 +176,7 @@
         <Separator Grid.Row="8" Style="{StaticResource FFSeparator}"/>
 
         <TextBlock Grid.Row="9" Text="Комментарий" Margin="0 0 0 10" Style="{StaticResource FFTextBlock}"></TextBlock>
-        <TextBox Margin="0 0 0 10" Grid.Row="10" Text="{Binding TempExpense.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FFTextArea}">
+        <TextBox Margin="0 0 0 10" Grid.Row="10" Text="{Binding TempIncome.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FFTextArea}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="TextChanged">
                     <i:InvokeCommandAction Command="{Binding ChangeDataCommand}"/>
@@ -191,8 +191,8 @@
                     <ColumnDefinition SharedSizeGroup="A"/>
                     <ColumnDefinition SharedSizeGroup="A"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="BtnSave" Grid.Column="0" Margin="0 0 10 0" Content="Сохранить" Command="{Binding SaveExpenseCommand}" Style="{StaticResource FFButton}"/>
-                <Button x:Name="BtnCancel" Grid.Column="1" Margin="10 0 0 0" Command="{Binding CancelExpenseCommand}" Style="{StaticResource FFButtonCancel}" Content="Отмена"/>
+                <Button x:Name="BtnSave" Grid.Column="0" Margin="0 0 10 0" Content="Сохранить" Command="{Binding SaveIncomeCommand}" Style="{StaticResource FFButton}"/>
+                <Button x:Name="BtnCancel" Grid.Column="1" Margin="10 0 0 0" Command="{Binding CancelIncomeCommand}" Style="{StaticResource FFButtonCancel}" Content="Отмена"/>
             </Grid>
         </Grid>
 
