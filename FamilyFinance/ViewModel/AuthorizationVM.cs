@@ -135,83 +135,65 @@ namespace FamilyFinance.ViewModel
         //проверка авторизации данных, если все совпадает то переходим на новую страницу, если нет уведомляем пользователя
         private async void OnAuthorization(object parametr)
         {
-            IsLoading = true;
-
             var passwordBox = parametr as PasswordBox;
             _password = passwordBox.Password;
 
-            try
+            if (!string.IsNullOrWhiteSpace(UserLogin) && !string.IsNullOrWhiteSpace(_password))
             {
-                Func<Client, Task> manipulatonDataMethod = async (client) =>
+                IsLoading = true;
+
+                try
                 {
-                    var token = await client.ApiAccountGetTokenAsync(UserLogin, _password);
-
-                    if (!string.IsNullOrEmpty(token.Value))
+                    Func<Client, Task> manipulatonDataMethod = async (client) =>
                     {
-                        ClientManager.SetAuthorizationBearer(token.Value);
-                    }
+                        var token = await client.ApiAccountGetTokenAsync(UserLogin, _password);
 
-                };
-                var resultCode = await ClientManager.ManipulatonData(manipulatonDataMethod);
+                        if (!string.IsNullOrEmpty(token.Value))
+                        {
+                            ClientManager.SetAuthorizationBearer(token.Value);
+                        }
 
-                if (resultCode == System.Net.HttpStatusCode.OK)
-                {
-                    Func<Client, Task> manipulatonDataMethod1 = async (client) =>
-                    {
-                        // Если token получен, получаем информацию о откущем пользователе и загружаем данные в программу
-                        var currentUser = await client.ApiAccountGetCurrentUserAsync();
-                        DataManager.CurrentUser = currentUser;
-                        DataManager.UserRole = (Role)currentUser.RoleId;
-                        // Обновляем данные в программе
-                        await DataManager.UpdateFromServer();
                     };
+                    var resultCode = await ClientManager.ManipulatonData(manipulatonDataMethod);
 
-                    var authResult = await ClientManager.ManipulatonData(manipulatonDataMethod1);
-
-                    if (authResult == System.Net.HttpStatusCode.OK)
+                    if (resultCode == System.Net.HttpStatusCode.OK)
                     {
-                        IsLoading = false;
-                        //MessageBox.Show($"Вход выполнен!");
+                        Func<Client, Task> manipulatonDataMethod1 = async (client) =>
+                        {
+                            // Если token получен, получаем информацию о откущем пользователе и загружаем данные в программу
+                            var currentUser = await client.ApiAccountGetCurrentUserAsync();
+                            DataManager.CurrentUser = currentUser;
+                            DataManager.UserRole = (Role)currentUser.RoleId;
+                            // Обновляем данные в программе
+                            await DataManager.UpdateFromServer();
+                        };
 
-                        MainWindow mainWindow = new MainWindow();
-                        mainWindow.Show();
+                        var authResult = await ClientManager.ManipulatonData(manipulatonDataMethod1);
 
-                        var currentWindow = Application.Current.MainWindow;
-                        currentWindow.Close();
+                        if (authResult == System.Net.HttpStatusCode.OK)
+                        {
+                            IsLoading = false;
+                            //MessageBox.Show($"Вход выполнен!");
+
+                            MainWindow mainWindow = new MainWindow();
+                            mainWindow.Show();
+
+                            var currentWindow = Application.Current.MainWindow;
+                            currentWindow.Close();
+                        }
+
                     }
-                   
+                    IsLoading = false;
                 }
-                IsLoading = false;
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Внимание", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message, "Внимание", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Введите логин и пароль!", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-
-            //if (_familyLogin == "Pavel" && _userLogin == "Pavel" && _password == "Pavel")
-            //{
-            //    MessageBox.Show($"Все ок! СемЛогин - {_familyLogin}, ЮзерЛогин - {_userLogin}, Пароль - {_password}");
-            //    //...переходим на страницу программы
-            //}
-            //else
-            //{
-            //    //..если нет тогда пошла проверка валидации каждого парметра чтобы подсветить красным ошибочные поля
-            //    if (_familyLogin != "Pavel")
-            //    {
-            //        FamilyLoginToolTip = "Неверный логин семьи!";
-            //        FamilyLoginBrush = Brushes.DarkRed;
-            //    }
-            //    if (_userLogin != "Pavel")
-            //    {
-            //        UserLoginToolTip = "Неверный логин пользователя!";
-            //        UserLoginBrush = Brushes.DarkRed;
-            //    }
-            //    if (_password != "Pavel")
-            //    {
-            //        PasswordToolTip = "Неверный пароль!";
-            //        PasswordBrush = Brushes.DarkRed;
-            //    }
-            //}
         }
 
         //Очистка при повторной попытке входа

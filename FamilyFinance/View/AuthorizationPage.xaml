@@ -30,14 +30,14 @@
             </Border.Effect>
             <StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 0 0 15">
-                    <Image Source="/FamilyFinance;component/Media/Image/MainIconV2.png" Width="40" Height="40"/>
+                    <Image Source="/FamilyFinance;component/Media/Image/MainIcon.png" Width="40" Height="40"/>
                     <TextBlock Text="Family Finance" VerticalAlignment="Bottom" FontSize="20" Margin="15 0 0 0" Foreground="#495057" FontWeight="Medium" FontFamily="Roboto"  ></TextBlock>
                 </StackPanel>
                 <Grid Margin="0 0 0 20">
                     <Button x:Name="btnRegistration" HorizontalAlignment="Left" Content="Регистрация" Style="{StaticResource MaterialDesignFlatButton}" Click="btnRegistration_Click"></Button>
                     <Button x:Name="btnEnter" HorizontalAlignment="Right" Content="Вход"></Button>
                 </Grid>
-                <TextBox x:Name="textBoxUserLogin" Text="{Binding UserLogin}" Background="{Binding UserLoginBrush}" ToolTip="{Binding UserLoginToolTip}" materialDesign:HintAssist.Hint="Логин пользователя" Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                <TextBox x:Name="textBoxUserLogin" Text="{Binding UserLogin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="{Binding UserLoginBrush}" ToolTip="{Binding UserLoginToolTip}" materialDesign:HintAssist.Hint="Логин пользователя" Style="{StaticResource MaterialDesignFloatingHintTextBox}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotFocus">
                             <i:InvokeCommandAction Command="{Binding GotFocusCommand}"></i:InvokeCommandAction>

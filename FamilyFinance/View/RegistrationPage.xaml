@@ -27,12 +27,15 @@
                 <DropShadowEffect BlurRadius="30" Color="LightBlue" ShadowDepth="1"></DropShadowEffect>
             </Border.Effect>
             <StackPanel Cursor="Arrow">
-                <TextBlock Text="Family Finance" FontSize="30" FontWeight="Bold" FontFamily="Times New Roman Italic" Margin="0 0 0 20" ></TextBlock>
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 15">
+                    <Image Source="/FamilyFinance;component/Media/Image/MainIcon.png" Width="40" Height="40"/>
+                    <TextBlock Text="Family Finance" VerticalAlignment="Bottom" FontSize="20" Margin="15 0 0 0" Foreground="#495057" FontWeight="Medium" FontFamily="Roboto"  ></TextBlock>
+                </StackPanel>
                 <Grid Margin="0 0 0 20">
                     <Button x:Name="btnRegistration" HorizontalAlignment="Left" Content="Регистрация"></Button>
                     <Button x:Name="btnEnter" HorizontalAlignment="Right" Content="Вход" Style="{StaticResource MaterialDesignFlatButton}" Click="btnEnter_Click"></Button>
                 </Grid>
-                <TextBlock Text="Регистрация Семейного Аккаунта" FontSize="25" FontWeight="Bold" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0 0 0 20" Foreground="#673ab7" ></TextBlock>
+                <TextBlock Text="Регистрация Аккаунта" FontSize="18" FontWeight="Bold" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0 0 0 20" Foreground="#673ab7" ></TextBlock>
                 <TextBox x:Name="textBoxLoginUser" Text="{Binding UserLogin}" ToolTip="{Binding UserLoginToolTip}" Background="{Binding UserLoginBrush}" materialDesign:HintAssist.Hint="Введите ваш логин" Style="{StaticResource MaterialDesignFloatingHintTextBox}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotFocus">
