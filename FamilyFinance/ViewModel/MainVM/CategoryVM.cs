@@ -61,7 +61,7 @@ namespace FamilyFinance.ViewModel.MainVM
         }
         private async void DeleteCategory(Category obj)
         {
-            var result = MessageBox.Show("Удалить?", "FamilyFinance", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var result = MessageBox.Show("Вместе с категорией будут удалены все доходы и подкатегории, удалить?", "FamilyFinance", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
             {
@@ -152,16 +152,21 @@ namespace FamilyFinance.ViewModel.MainVM
 
         private async void DeleteSubCategory(SubCategory obj)
         {
-            Func<Client, Task> manipulationDataMethod = async (client) =>
-            {
-                var subCategory = await client.ApiSubCategoryDeleteAsync(obj.Id);
-            };
+            var result = MessageBox.Show("Вместе с подкатегорией будут удалены все доходы по этой подкатегории, удалить?", "FamilyFinance", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-            var status = await ClientManager.ManipulatonData(manipulationDataMethod);
-
-            if (status == HttpStatusCode.OK)
+            if (result == MessageBoxResult.Yes)
             {
-                await UpdateSubCategories(SelectedCategory.Id);
+                Func<Client, Task> manipulationDataMethod = async (client) =>
+                {
+                    var subCategory = await client.ApiSubCategoryDeleteAsync(obj.Id);
+                };
+
+                var status = await ClientManager.ManipulatonData(manipulationDataMethod);
+
+                if (status == HttpStatusCode.OK)
+                {
+                    await UpdateSubCategories(SelectedCategory.Id);
+                }
             }
         }
 
@@ -213,7 +218,7 @@ namespace FamilyFinance.ViewModel.MainVM
         }
         private async void DeleteCategoryExpenses(CategoryExpense obj)
         {
-            var result = MessageBox.Show("Удалить?", "FamilyFinance", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var result = MessageBox.Show("Вместе с категорией будут удалены все расходы и подкатегории, удалить?", "FamilyFinance", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
             {
@@ -304,16 +309,21 @@ namespace FamilyFinance.ViewModel.MainVM
 
         private async void DeleteSubCategoryExpense(SubCategoryExpense obj)
         {
-            Func<Client, Task> manipulationDataMethod = async (client) =>
-            {
-                var subCategory = await client.ApiSubCategoryExpenseDeleteAsync(obj.Id);
-            };
+            var result = MessageBox.Show("Вместе с подкатегорией будут удалены все расходы по этой подкатегории, удалить?", "FamilyFinance", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-            var status = await ClientManager.ManipulatonData(manipulationDataMethod);
-
-            if (status == HttpStatusCode.OK)
+            if (result == MessageBoxResult.Yes)
             {
-                await UpdateSubCategoriesExpense(SelectedCategoryExpense.Id);
+                Func<Client, Task> manipulationDataMethod = async (client) =>
+                {
+                    var subCategory = await client.ApiSubCategoryExpenseDeleteAsync(obj.Id);
+                };
+
+                var status = await ClientManager.ManipulatonData(manipulationDataMethod);
+
+                if (status == HttpStatusCode.OK)
+                {
+                    await UpdateSubCategoriesExpense(SelectedCategoryExpense.Id);
+                }
             }
         }
 

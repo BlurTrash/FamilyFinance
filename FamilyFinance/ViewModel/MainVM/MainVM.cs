@@ -17,6 +17,7 @@ namespace FamilyFinance.ViewModel.MainVM
         }
 
         public Role UserRole { get { return DataManager.UserRole; } }
+        public string UserLogin { get; set; } = "[" + DataManager.CurrentUser.Login + "]";
 
         public event PropertyChangedEventHandler PropertyChanged;
     }
