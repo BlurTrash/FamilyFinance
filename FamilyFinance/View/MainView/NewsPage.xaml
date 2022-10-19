@@ -1,0 +1,94 @@
+﻿<UserControl x:Class="FamilyFinance.View.MainView.NewsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FamilyFinance.View.MainView"
+             xmlns:controls="clr-namespace:FamilyFinance.Shared.Controls"
+             xmlns:validation="clr-namespace:FamilyFinance.Shared.ValidationRules"
+             xmlns:localViewModel="clr-namespace:FamilyFinance.ViewModel.MainVM"
+             xmlns:converters="clr-namespace:FamilyFinance.Core.Converters"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             d:DataContext="{d:DesignInstance Type=localViewModel:NewsVM}"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1100" FontSize="14" x:Name="NewsControl">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/FamilyFinance;component/FFResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" BorderThickness="1" CornerRadius="4 4 0 0" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource HeaderBrush}">
+            <Grid Margin="0 0 22 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Новости" Grid.Column="0" VerticalAlignment="Center" Margin="20 0" Style="{StaticResource FFTextBlockTitle}"/>
+
+                <Button Grid.Column="2" Content="Обновить" Height="34" Margin="10" Command="{Binding UpdateNewsCommand}" Style="{StaticResource FFButton}"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Background="{StaticResource ControlBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1 0 1 1" CornerRadius="0 0 4 4">
+            <Grid Margin="15">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
+                    <ItemsControl ItemsSource="{Binding News}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0 0 0 1">
+                                    <Grid Margin="0 10">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid Grid.Column="0" Grid.Row="0" Width="120" Height="90">
+                                            <Border BorderThickness="1" CornerRadius="5" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource HeaderBrush}">
+                                                <Image Source="{Binding Path=NewsImage}"/>
+                                            </Border>
+                                        </Grid>
+
+                                        <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+
+                                            <Grid Margin="15 0 0 0" Grid.Row="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Text="{Binding Path=Header}" Grid.Column="0" HorizontalAlignment="Left" ToolTip="{Binding Header}" TextWrapping="Wrap" Style="{StaticResource FFTextBlockTitle}"/>
+                                                <TextBlock Text="{Binding Path=Date, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" Margin="20 0 20 0" Grid.Column="1" ToolTip="{Binding Date}" VerticalAlignment="Top" FontSize="16" FontWeight="Normal"/>
+                                            </Grid>
+
+                                            <Grid Margin="15 15 0 0" Grid.Row="1">
+                                                <TextBlock Text="{Binding Path=Description}"  HorizontalAlignment="Left" ToolTip="{Binding Description}" TextWrapping="Wrap" FontSize="16" FontWeight="Normal"/>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,155 @@
+﻿<UserControl x:Class="FamilyFinance.View.MainView.AboutPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FamilyFinance.View.MainView"
+             xmlns:controls="clr-namespace:FamilyFinance.Shared.Controls"
+             xmlns:localViewModel="clr-namespace:FamilyFinance.ViewModel.MainVM"
+             xmlns:converters="clr-namespace:FamilyFinance.Core.Converters"
+             xmlns:extensions ="clr-namespace:FamilyFinance.Shared.Controls.Extensions"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             d:DataContext="{d:DesignInstance Type=localViewModel:AboutVM}"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1100" FontSize="14" x:Name="AboutControl">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/FamilyFinance;component/FFResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" BorderThickness="1" CornerRadius="4 4 0 0" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource HeaderBrush}">
+            <Grid Height="54">
+                <TextBlock Margin="20 0 0 0" VerticalAlignment="Center" Grid.Column="0" Text="О проекте FamilyFinance" Style="{StaticResource FFTextBlockTitle}"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Background="{StaticResource ControlBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1 0 1 1" CornerRadius="0 0 4 4">
+            <Grid Margin="40 15">
+                <FlowDocumentScrollViewer x:Name="scrollViewer">
+                    <FlowDocument>
+                        <Paragraph FontWeight="Bold">1.
+                            <Hyperlink NavigateUri="AboutProject">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="RequestNavigate">
+                                        <i:InvokeCommandAction Command="{Binding NavigateToAboutProjectCommand}" CommandParameter="{Binding ElementName=scrollViewer}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                О проекте
+                            </Hyperlink>
+                        </Paragraph>
+
+                        <Paragraph FontWeight="Bold">2.
+                            <Hyperlink NavigateUri="ProjectDescription">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="RequestNavigate">
+                                        <i:InvokeCommandAction Command="{Binding NavigateToProjectDescriptionCommand}" CommandParameter="{Binding ElementName=scrollViewer}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                Описание проекта
+                            </Hyperlink>
+                        </Paragraph>
+
+                        <Paragraph FontWeight="Bold">3.
+                            <Hyperlink NavigateUri="ProjectRules">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="RequestNavigate">
+                                        <i:InvokeCommandAction Command="{Binding NavigateToProjectRulesCommand}" CommandParameter="{Binding ElementName=scrollViewer}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                Правила использования сервиса
+                            </Hyperlink>
+                        </Paragraph>
+
+                        <Paragraph FontWeight="Bold">4.
+                            <Hyperlink NavigateUri="ProjectPrivacyPolicy">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="RequestNavigate">
+                                        <i:InvokeCommandAction Command="{Binding NavigateToProjectPrivacyPolicyCommand}" CommandParameter="{Binding ElementName=scrollViewer}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                Политика конфиденциальности
+                            </Hyperlink>
+                        </Paragraph>
+
+                        <Paragraph FontSize="18" FontWeight="Bold" TextAlignment="Center" Name="AboutProject">
+                            О проекте
+                        </Paragraph>
+                        <Paragraph FontSize="16" LineHeight="30">
+                            Проект «FamilyFinance» - создан студентом «Академии ШАГ» (она же Академия ТОП),
+                            Кувшинчиковым Павлом Олеговичем, в 2022г. Проект разработан исключительно в учебных целях,
+                            как Дипломная работа к выпуску.
+                            <LineBreak/>
+                            Использованы технологии:
+                            <LineBreak/>
+                            -Язык разработки С# и платформа .net
+                            <LineBreak/>
+                            -WPF
+                            <LineBreak/>
+                            -EntityFramework
+                            <LineBreak/>
+                            -WebApi
+                        </Paragraph>
+
+                        <Paragraph FontSize="18" FontWeight="Bold" TextAlignment="Center" Name="ProjectDescription">
+                            Описание проекта
+                        </Paragraph>
+
+                        <Paragraph FontSize="16" LineHeight="30">
+                            «FamilyFinance» - представляет собой приложение для ведения домашней бухгалтерии.
+                            <LineBreak/>
+                            Решение состоит из 2х частей:
+                            <LineBreak/>
+                            1) WebApi – серверная часть приложения
+                            <LineBreak/>
+                            2) FamilyFinance – приложение клиента
+                            <LineBreak/>
+                            Доступ осуществляется путем регистрации в сервисе
+                        </Paragraph>
+
+                        <Paragraph FontSize="18" FontWeight="Bold" TextAlignment="Center" Name="ProjectRules">
+                            Правила использования сервиса
+                        </Paragraph>
+
+                        <Paragraph FontSize="16" LineHeight="30">
+                            Сервис для учета личных финансов «FamilyFinance» предоставляется с учетом следующих правил:
+                            <LineBreak/>
+                            1. Авторскими правами на Сервис обладает Автор.
+                            <LineBreak/>
+                            2. Любая личная информация, которая используется для работы Сервиса (электронная почта, список расходов, доходов, счетов и т.п.) не передается третьим лицам. Эти данные остаются внутри системы.
+                            <LineBreak/>
+                            3. Сервис распространяется по принципу «как есть», при этом не предусматривается никаких гарантий, явных или подразумеваемых. Автор не несет ответственности за потери данных, повреждения, потери прибыли или любые другие виды потерь, связанные с использованием (правильным или неправильным) Сервиса.
+                            <LineBreak/>
+                            4. Автор имеет право по своему усмотрению и необходимости создавать, изменять или отменять действующие правила.
+                            <LineBreak/>
+                            5. Автор может на свое усмотрение ограничивать доступ к любой информации, а также блокировать и удалять аккаунты пользователей, вносить изменения в пользовательскую базу данных без предварительного уведомления.
+                            <LineBreak/>
+                            6. Пользователь обязуется не нарушать работоспособность Сервиса, а также не использовать скрипты (или программы) для автоматизированного сбора информации, подбора паролей и любых действий, которые негативно сказываются на работе Сервиса.
+                            <LineBreak/>
+                            Регистрация в Сервисе и его использование свидетельствует о вашем согласии с вышеперечисленными правилами.
+                        </Paragraph>
+
+
+                        <Paragraph FontSize="18" FontWeight="Bold" TextAlignment="Center" Name="ProjectPrivacyPolicy">
+                            Политика конфиденциальности
+                        </Paragraph>
+
+                        <Paragraph FontSize="16" LineHeight="30">
+                            Настоящий раздел «Политика конфиденциальности» представляет собой правила использования персональной информации Пользователя.
+                            <LineBreak/>
+                            Использование Сервиса означает безоговорочное согласие пользователя с настоящей Политикой и указанными в ней условиями обработки его персональной информации; в случае несогласия с этими условиями пользователь должен воздержаться от использования Сервиса.
+                        </Paragraph>
+                        
+                    </FlowDocument>
+                </FlowDocumentScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
