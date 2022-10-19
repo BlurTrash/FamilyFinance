@@ -70,6 +70,21 @@ namespace FamilyFinance.Model
                 _userChecks.AddRange(value);
             }
         }
+
+        //Новости приложения
+        private static ObservableCollection<News> _newsFamilyFinance = new();
+        public static ObservableCollection<News> NewsFamilyFinance
+        {
+            get
+            {
+                return _newsFamilyFinance;
+            }
+            set
+            {
+                _newsFamilyFinance.Clear();
+                _newsFamilyFinance.AddRange(value);
+            }
+        }
         #endregion
 
         /// <summary>
@@ -88,17 +103,20 @@ namespace FamilyFinance.Model
                 var incomeСategories = client.ApiCategoryGetAllByUserIdAsync(CurrentUser.Id); //загрузка категорий доходов
                 var expensesCategories = client.ApiCategoryExpenseGetAllByUserIdAsync(CurrentUser.Id); //загрузка категорий расходов
                 var userChecks = client.ApiCheckGetAllByUserIdAsync(CurrentUser.Id); //загрузка всех счетов пользователя
+                var ffNews = client.ApiNewsGetAllAsync(); //загрузка всех новостей
 
                 // Загрузка данных
                 await Task.WhenAll(
                     incomeСategories,
                     expensesCategories,
-                    userChecks);
+                    userChecks,
+                    ffNews);
 
                 // Устанавливаем значения свойствам
                 IncomeСategories = new(incomeСategories.Result.ToList());
                 ExpensesСategories = new(expensesCategories.Result.ToList());
                 UserChecks = new(userChecks.Result.ToList());
+                NewsFamilyFinance = new(ffNews.Result.ToList());
             };
 
             var resultStatus = await ClientManager.ManipulatonData(manipulationDataMethod);
@@ -143,6 +161,17 @@ namespace FamilyFinance.Model
                 var usersChecks = await client.ApiCheckGetAllByUserIdAsync(CurrentUser.Id); //загрузка счетов пользователя
                 // Устанавливаем значения свойствам
                 UserChecks = new(usersChecks.ToList());
+            };
+            await ClientManager.ManipulatonData(manipulationDataMethod);
+        }
+
+        public static async Task UpdateNews()
+        {
+            Func<Client, Task> manipulationDataMethod = async (client) =>
+            {
+                var ffNews = await client.ApiNewsGetAllAsync(); //загрузка новостей
+                // Устанавливаем значения свойствам
+                NewsFamilyFinance = new(ffNews.ToList());
             };
             await ClientManager.ManipulatonData(manipulationDataMethod);
         }

@@ -70,6 +70,7 @@ namespace FamilyFinance.Model
         {
             _httpClient = new HttpClient();
             BaseUrl = "https://localhost:5001/";
+            //BaseUrl = "http://192.168.0.109:5000/";
         }
 
         /// <summary>
