@@ -21,12 +21,50 @@
             <converters:AuthVisibilityConverter x:Key="AuthVisibilityConverter"/>
             <converters:NonAuthEnabledConverter x:Key="NonAuthEnabledConverter"/>
             <converters:NonAuthVisibilityConverter x:Key="NonAuthVisibilityConverter"/>
+            <converters:AuthAdminModeratorVisibilityConverter x:Key="AdminModeratorVisibilityConverter"/>
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
         <TabControl TabStripPlacement="Left" Style="{StaticResource FFTabControl}">
 
-            <TabItem Name="Expenses" Header="Расходы">
+            <TabItem Name="AppIcon"  IsHitTestVisible="False">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Image Grid.Row="0" HorizontalAlignment="Center" Grid.Column="1" Source="/FamilyFinance;component/Media/Image/MainIcon.png" Width="80" Height="80"/>
+                            <TextBlock Grid.Row="2" Text="Family Finance" FontSize="16" Foreground="#495057" FontWeight="Medium" FontFamily="Roboto"/>
+                        </Grid>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+            </TabItem>
+
+            <TabItem Name="User" Header="{Binding UserLogin}" IsHitTestVisible="False"/>
+
+            <TabItem Margin="0 20" IsEnabled="False" IsHitTestVisible="False">
+                <TabItem.Header>
+                    <Separator Height="5" Width="100" Background="Black"/>
+                </TabItem.Header>
+            </TabItem>
+
+            <TabItem Name="Expenses" Selector.IsSelected="True" Cursor="Hand">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+                            <Image HorizontalAlignment="Left" Grid.Column="1" Source="/FamilyFinance;component/Media/Image/Expense.png" Width="20" Height="20"/>
+                            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="Расходы" Margin="5 0 0 0"/>
+                        </Grid>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
                 <TabItem.Content>
                     <Grid>
                         <views:NonAuth Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource NonAuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource NonAuthVisibilityConverter}, Mode=OneWay}"/>
@@ -35,7 +73,20 @@
                 </TabItem.Content>
             </TabItem>
 
-            <TabItem Name="Income" Header="Доходы">
+            <TabItem Name="Income" Header="Доходы" Cursor="Hand">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="1" HorizontalAlignment="Left" Source="/FamilyFinance;component/Media/Image/Income.png" Width="20" Height="20"/>
+                            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="Доходы" Margin="5 0 0 0"/>
+                        </Grid>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
                 <TabItem.Content>
                     <Grid>
                         <views:NonAuth Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource NonAuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource NonAuthVisibilityConverter}, Mode=OneWay}"/>
@@ -44,7 +95,20 @@
                 </TabItem.Content>
             </TabItem>
 
-            <TabItem Name="Сhecks" Header="Счета">
+            <TabItem Name="Сhecks" Header="Счета" Cursor="Hand">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="1" HorizontalAlignment="Left" Source="/FamilyFinance;component/Media/Image/Checks.png" Width="20" Height="20"/>
+                            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="Счета" Margin="5 0 0 0"/>
+                        </Grid>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
                 <TabItem.Content>
                     <Grid>
                         <views:NonAuth Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource NonAuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource NonAuthVisibilityConverter}, Mode=OneWay}"/>
@@ -53,7 +117,20 @@
                 </TabItem.Content>
             </TabItem>
 
-            <TabItem Name="Categories" Header="Категории">
+            <TabItem Name="Categories" Header="Категории" Cursor="Hand">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="1" HorizontalAlignment="Left" Source="/FamilyFinance;component/Media/Image/Categories.png" Width="20" Height="20"/>
+                            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="Категории" Margin="5 0 0 0"/>
+                        </Grid>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
                 <TabItem.Content>
                     <Grid>
                         <views:NonAuth Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource NonAuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource NonAuthVisibilityConverter}, Mode=OneWay}"/>
@@ -62,7 +139,20 @@
                 </TabItem.Content>
             </TabItem>
 
-            <TabItem Name="Reports" Header="Отчеты">
+            <TabItem Name="Reports" Header="Отчеты" Cursor="Hand">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="1" HorizontalAlignment="Left" Source="/FamilyFinance;component/Media/Image/Report.png" Width="20" Height="20"/>
+                            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="Отчеты" Margin="5 0 0 0"/>
+                        </Grid>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
                 <TabItem.Content>
                     <Grid>
                         <views:NonAuth Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource NonAuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource NonAuthVisibilityConverter}, Mode=OneWay}"/>
@@ -70,30 +160,94 @@
                     </Grid>
                 </TabItem.Content>
             </TabItem>
-
-            <TabItem Name="Sprav" Header="Справка">
-                <TabItem.Content>
-                    <TextBlock Text="Справка"/>
-                </TabItem.Content>
-            </TabItem>
-
-            <TabItem Margin="0 20" IsEnabled="False" IsHitTestVisible="False">
-                <TabItem.Header>
-                    <Separator Height="5" Width="100" Background="Red"/>
-                </TabItem.Header>
-            </TabItem>
-
-            <TabItem  Name="Nov" Header="Новости" >
+            
+            <TabItem Name="Settings" Header="Настройки" Cursor="Hand" Visibility="{Binding UserRole, Converter={StaticResource AdminModeratorVisibilityConverter}, Mode=OneWay}">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="1" HorizontalAlignment="Left" Source="/FamilyFinance;component/Media/Image/Settings.png" Width="20" Height="20"/>
+                            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="Настройки" Margin="5 0 0 0"/>
+                        </Grid>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
                 <TabItem.Content>
                     <Grid>
-                        <!--<views:TestPage Margin="10"/>-->
+                        <views:SettingsPage Margin="10"/>
                     </Grid>
                 </TabItem.Content>
             </TabItem>
 
-            <TabItem  Name="Abo" Header="О проекте" >
+            <TabItem Name="Help" Header="Справка" Cursor="Hand" Visibility="Collapsed">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="1" HorizontalAlignment="Left" Source="/FamilyFinance;component/Media/Image/Help.png" Width="20" Height="20"/>
+                            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="Справка" Margin="5 0 0 0"/>
+                        </Grid>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
                 <TabItem.Content>
-                    <TextBlock Text="О проекте"/>
+                    <TextBlock Text="Раздел в разработке"/>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem Margin="0 20" IsEnabled="False" IsHitTestVisible="False" Cursor="Hand">
+                <TabItem.Header>
+                    <Separator Height="5" Width="100" Background="Black"/>
+                </TabItem.Header>
+            </TabItem>
+
+            <TabItem Name="News" Header="Новости" Cursor="Hand">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="1" HorizontalAlignment="Left" Source="/FamilyFinance;component/Media/Image/News.png" Width="20" Height="20"/>
+                            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="Новости" Margin="5 0 0 0"/>
+                        </Grid>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+                <TabItem.Content>
+                    <Grid>
+                        <views:NonAuth Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource NonAuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource NonAuthVisibilityConverter}, Mode=OneWay}"/>
+                        <views:NewsPage Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource AuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource AuthVisibilityConverter}, Mode=OneWay}"/>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem Name="Info" Header="О проекте" Cursor="Hand">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="1" HorizontalAlignment="Left" Source="/FamilyFinance;component/Media/Image/Information.png" Width="20" Height="20"/>
+                            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="О проекте" Margin="5 0 0 0"/>
+                        </Grid>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+                <TabItem.Content>
+                    <Grid>
+                        <views:NonAuth Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource NonAuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource NonAuthVisibilityConverter}, Mode=OneWay}"/>
+                        <views:AboutPage Margin="10" IsEnabled="{Binding UserRole, Converter={StaticResource AuthEnabledConverter}, Mode=OneWay}" Visibility="{Binding UserRole, Converter={StaticResource AuthVisibilityConverter}, Mode=OneWay}"/>
+                    </Grid>
                 </TabItem.Content>
             </TabItem>
         </TabControl>
