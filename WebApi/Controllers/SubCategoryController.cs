@@ -132,16 +132,28 @@ namespace WebApi.Controllers
         {
             try
             {
-                var subCategory = db.SubCategories.FirstOrDefault(s => s.Id == id);
-                if (subCategory == null)
+                using (var transaction = db.Database.BeginTransaction())
                 {
-                    return NotFound($"Категория не найдена.");
+                    var subCategory = db.SubCategories.FirstOrDefault(s => s.Id == id);
+                    if (subCategory == null)
+                    {
+                        return NotFound($"Категория не найдена.");
+                    }
+
+                    var incomes = db.Incomes.Where(i => i.SubCategoryId == subCategory.Id);
+                    foreach (var item in incomes)
+                    {
+                        db.Incomes.Remove(item);
+                    }
+                    db.SaveChanges();
+
+                    db.SubCategories.Remove(subCategory);
+                    db.SaveChanges();
+
+                    transaction.Commit();
+
+                    return Ok(subCategory);
                 }
-
-                db.SubCategories.Remove(subCategory);
-                db.SaveChanges();
-
-                return Ok(subCategory);
             }
             catch (Exception ex)
             {
