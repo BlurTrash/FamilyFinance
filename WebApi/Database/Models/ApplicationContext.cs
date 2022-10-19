@@ -19,6 +19,7 @@ namespace WebApi.Database.Models
         public DbSet<CategoryExpense> CategoriesExpense { get; set; }
         public DbSet<CurrencyRate> CurrencyRates { get; set; }
         public DbSet<Income> Incomes { get; set; }
+        public DbSet<News> News { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
