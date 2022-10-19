@@ -2030,6 +2030,7 @@
                                 <Setter TargetName="TabItemBorder" Property="BorderBrush" Value="{StaticResource ButtonBrush}"/>
                                 <Setter Property="Panel.ZIndex" Value="100"/>
                                 <Setter TargetName="ContentSite" Property="TextBlock.Foreground" Value="{StaticResource HighLightTextBrush}"/>
+                                <Setter Property="Background" TargetName="TabItemBorder" Value="{StaticResource HighLightBrush}"/>
                             </MultiTrigger.Setters>
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
