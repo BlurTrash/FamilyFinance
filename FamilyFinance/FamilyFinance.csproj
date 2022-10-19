@@ -4,11 +4,22 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>MainIconV2.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Media\Image\Categories.png" />
+    <None Remove="Media\Image\Checks.png" />
+    <None Remove="Media\Image\Expense.png" />
+    <None Remove="Media\Image\Help.png" />
+    <None Remove="Media\Image\Income.png" />
+    <None Remove="Media\Image\Information.png" />
     <None Remove="Media\Image\MainIcon.png" />
     <None Remove="Media\Image\MainIconV2.png" />
+    <None Remove="Media\Image\News.png" />
+    <None Remove="Media\Image\NoneImage.jpg" />
+    <None Remove="Media\Image\Report.png" />
+    <None Remove="Media\Image\Settings.png" />
     <None Remove="Themes\Fonts\primeicons.ttf" />
   </ItemGroup>
 
@@ -18,13 +29,41 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.16" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.4.1" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Media\Image\Categories.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Media\Image\Checks.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Media\Image\Expense.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Media\Image\Help.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Media\Image\Income.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Media\Image\Information.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Media\Image\MainIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Media\Image\MainIconV2.png">
+    <Resource Include="Media\Image\News.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="Media\Image\NoneImage.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Media\Image\Report.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Media\Image\Settings.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Themes\Fonts\primeicons.ttf" />
