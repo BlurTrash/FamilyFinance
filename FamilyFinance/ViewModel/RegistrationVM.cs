@@ -227,7 +227,6 @@ namespace FamilyFinance.ViewModel
             _password = passwordBox.Password;
             try
             {
-                //соединение с бз 
                 if (IsValidField(_userLogin) && IsValidField(_firstName) && IsValidField(_secondName) && IsValidField(_password) && IsValidMail(_mail))
                 {
                     User tempUser = new User() { Login = _userLogin, FirstName = _firstName, SecondName = _secondName, Email = _mail };
@@ -246,10 +245,9 @@ namespace FamilyFinance.ViewModel
                     if (resultCode == System.Net.HttpStatusCode.OK)
                     {
                         MessageBox.Show($"Пользователь зарегистрирован!\n ЮзерЛогин - {newUser.Login}\n Имя - {newUser.FirstName}\n Фамилия - {newUser.SecondName}\n Email - {newUser.Email}");
+                        //...переходим на страницу входа
+                        _navPage.NavigationService.Navigate(new AuthorizationPage());
                     }
-
-                    //...переходим на страницу входа
-                    _navPage.NavigationService.Navigate(new AuthorizationPage());
                 }
                 else
                 {
