@@ -23,6 +23,19 @@
             <Grid>
                 <TabControl Style="{StaticResource FFTabControl}" Background="White">
                     <TabItem Header="Доходы">
+                        <TabItem.HeaderTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="80"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Grid.Column="1" HorizontalAlignment="Left" Source="/FamilyFinance;component/Media/Image/Income.png" Width="20" Height="20"/>
+                                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="Доходы" Margin="5 0 0 0"/>
+                                </Grid>
+                            </DataTemplate>
+                        </TabItem.HeaderTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -180,7 +193,20 @@
                         </Grid>
                     </TabItem>
 
-                    <TabItem Header="Расходы" Background="White">
+                    <TabItem Header="Расходы">
+                        <TabItem.HeaderTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="80"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image HorizontalAlignment="Left" Grid.Column="1" Source="/FamilyFinance;component/Media/Image/Expense.png" Width="20" Height="20"/>
+                                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="Расходы" Margin="5 0 0 0"/>
+                                </Grid>
+                            </DataTemplate>
+                        </TabItem.HeaderTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
