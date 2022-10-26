@@ -31,6 +31,7 @@ namespace WebApi.Controllers
         /// Возвращает: Cписок всех Пользователей
         /// </summary>
         [HttpGet]
+        [Authorize(Roles = "admin,moderator")]
         public ActionResult<IEnumerable<User>> GetAll()
         {
             var usersCollection = (IEnumerable<User>)db.Users.Select(u => u);
@@ -45,6 +46,7 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
+        [Authorize]
         public ActionResult<User> Get(int id)
         {
             var user = db.Users.FirstOrDefault(u => u.Id == id);
@@ -62,11 +64,19 @@ namespace WebApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
         [ProducesDefaultResponseType]
         public ActionResult<User> Post([FromBody] User user, string password)
         {
             try
             {
+                var userReg = db.Users.FirstOrDefault(u => u.Email.ToLower() == user.Email.ToLower());
+
+                if (userReg != null)
+                {
+                    return Conflict("Указанная почта уже зарегистрирована!");
+                }
+
                 user.Password = AuthUtils.GetHash(password);
 
                 var userRole = db.Roles.FirstOrDefault(r => r.Name == "user");
@@ -75,6 +85,19 @@ namespace WebApi.Controllers
                     user.Role = userRole;
 
                 db.Users.Add(user);
+                db.SaveChanges();
+
+                Check baseUserCheck = new Check()
+                {
+                    UserId = user.Id,
+                    CurrencyRateId = 1,  //рублевая валюта
+                    Amount = 0,
+                    Description = "Базовый наличный счет, создан автоматически!",
+                    IsMasterCheck = true,
+                    Name = "Наличные"
+                };
+
+                db.Checks.Add(baseUserCheck);
                 db.SaveChanges();
 
                 return Get(user.Id);
@@ -93,6 +116,7 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
+        [Authorize]
         public ActionResult<User> Put([FromBody] User user)
         {
             try
@@ -119,6 +143,7 @@ namespace WebApi.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
+        [Authorize(Roles = "admin,moderator")]
         public ActionResult<User> Delete(int id)
         {
             try

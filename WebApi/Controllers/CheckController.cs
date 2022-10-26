@@ -242,7 +242,7 @@ namespace WebApi.Controllers
 
                 var topFiveChecks = checks.OrderByDescending(c => c.Amount * c.CurrencyRate.ExchangeRate).Take(5).OrderBy(c => c.Name).ToList();
 
-                var checksDetailsCollection = topFiveChecks.Select(c => new CheckDetails { CheckName = c.Name, CurrencyStringCode = c.CurrencyRate.CurrencyStringCode, Summ = Decimal.Round(c.Amount), Persent = (double)Decimal.Round(c.Amount * c.CurrencyRate.ExchangeRate / totalAmount * 100) }).ToList();
+                var checksDetailsCollection = topFiveChecks.Select(c => new CheckDetails { CheckName = c.Name, CurrencyStringCode = c.CurrencyRate.CurrencyStringCode, Summ = Decimal.Round(c.Amount), Persent = (c.Amount == 0) ? 0 : (double)Decimal.Round(c.Amount * c.CurrencyRate.ExchangeRate / totalAmount * 100) }).ToList();
 
                 return Ok(checksDetailsCollection);
             }

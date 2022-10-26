@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebApi.Core.Authorization;
 using WebApi.Database.Models;
 using WebApi.Models;
@@ -30,7 +29,7 @@ namespace WebApi.Controllers
         /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
         [Authorize]
         public ActionResult<IEnumerable<ReportDetails>> GetAllCheckBalances()
@@ -45,7 +44,7 @@ namespace WebApi.Controllers
 
                 var sortedChecks = checks.OrderByDescending(c => c.Amount * c.CurrencyRate.ExchangeRate).ToList();
 
-                var reportDetailsCollection = sortedChecks.Select(c => new ReportDetails { Name = c.Name, ExchageRate = c.CurrencyRate.ExchangeRate, CurrencyStringCode = c.CurrencyRate.CurrencyStringCode, Summ = Decimal.Round(c.Amount), Persent = (double)Decimal.Round(c.Amount * c.CurrencyRate.ExchangeRate / totalAmount * 100) }).ToList();
+                var reportDetailsCollection = sortedChecks.Select(c => new ReportDetails { Name = c.Name, ExchageRate = c.CurrencyRate.ExchangeRate, CurrencyStringCode = c.CurrencyRate.CurrencyStringCode, Summ = Decimal.Round(c.Amount), Persent = (c.Amount == 0) ? 0 : (double)Decimal.Round(c.Amount * c.CurrencyRate.ExchangeRate / totalAmount * 100) }).ToList();
 
                 return Ok(reportDetailsCollection);
             }
@@ -61,7 +60,7 @@ namespace WebApi.Controllers
         /// </summary>
         [HttpGet("{date}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
         [Authorize]
         public ActionResult<IEnumerable<ReportDetails>> GetAllExpenseByMonth(DateTime date)
@@ -100,7 +99,7 @@ namespace WebApi.Controllers
         /// </summary>
         [HttpGet("{startDate}/{endDate}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
         [Authorize]
         public ActionResult<IEnumerable<ReportDetails>> GetAllExpenseByInterval(DateTime startDate, DateTime endDate)
@@ -139,7 +138,7 @@ namespace WebApi.Controllers
         /// </summary>
         [HttpGet("{date}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
         [Authorize]
         public ActionResult<IEnumerable<ReportDetails>> GetAllIncomeByMonth(DateTime date)
@@ -178,7 +177,7 @@ namespace WebApi.Controllers
         /// </summary>
         [HttpGet("{startDate}/{endDate}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
         [Authorize]
         public ActionResult<IEnumerable<ReportDetails>> GetAllIncomeByInterval(DateTime startDate, DateTime endDate)
