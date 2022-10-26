@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -18,9 +19,11 @@ namespace WebApi.Services
     public class CurrencyService : BackgroundService
     {
         private readonly IMemoryCache memoryCache;
+        private ApplicationContext db;
 
-        public CurrencyService(IMemoryCache memoryCache)
+        public CurrencyService(IMemoryCache memoryCache, IServiceProvider serviceProvider)
         {
+            this.db = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationContext>();
             this.memoryCache = memoryCache;
         }
 
@@ -58,6 +61,17 @@ namespace WebApi.Services
                             ExchangeRate = Decimal.Round(Convert.ToDecimal(item.ExchangeRate), 2)
                         });
                     }
+
+                    foreach (var item in currencyList)
+                    {
+                        var currency = db.CurrencyRates.FirstOrDefault(c => c.CurrencyStringCode == item.CurrencyStringCode);
+                        if (currency != null)
+                        {
+                            currency.ExchangeRate = item.ExchangeRate;
+                            db.CurrencyRates.Update(currency);
+                        }
+                    }
+                    db.SaveChanges();
 
                     memoryCache.Set("key_currencyList", currencyList, TimeSpan.FromMinutes(1440));
                 }
