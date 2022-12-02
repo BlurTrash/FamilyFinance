@@ -98,7 +98,7 @@ namespace FamilyFinance.Shared.Controls
 
         //свойства видимости секунд и дней
         public static readonly DependencyProperty SecondsVisibilityProperty = DependencyProperty.Register("SecondsVisibility",
-            typeof(Visibility), typeof(TimeSpanUpDown), new FrameworkPropertyMetadata(Visibility.Hidden, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+            typeof(Visibility), typeof(TimeSpanUpDown), new FrameworkPropertyMetadata(Visibility.Collapsed, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         public Visibility SecondsVisibility
         {
             get { return (Visibility)GetValue(SecondsVisibilityProperty); }

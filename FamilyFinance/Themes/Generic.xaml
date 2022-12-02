@@ -8,5 +8,6 @@
         <ResourceDictionary Source="/FamilyFinance;component/Shared/Controls/ChipsPanel/Themes/ChipsPanel.xaml"/>
         <ResourceDictionary Source="/FamilyFinance;component/Shared/Controls/ChipsPanel/Themes/ChipsItem.xaml"/>
         <ResourceDictionary Source="/FamilyFinance;component/Shared/Controls/Chip/Themes/Chip.xaml"/>
+        <ResourceDictionary Source="/FamilyFinance;component/Shared/Controls/FilterTextBox/Themes/FilterTextBox.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

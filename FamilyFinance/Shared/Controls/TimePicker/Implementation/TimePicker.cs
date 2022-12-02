@@ -164,7 +164,7 @@ namespace FamilyFinance.Shared.Controls
 
         #region SecondsVisibility and DaysVisibility
         public static readonly DependencyProperty SecondsVisibilityProperty = DependencyProperty.Register("SecondsVisibility",
-            typeof(Visibility), typeof(TimePicker), new FrameworkPropertyMetadata(Visibility.Hidden, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+            typeof(Visibility), typeof(TimePicker), new FrameworkPropertyMetadata(Visibility.Collapsed, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         public Visibility SecondsVisibility
         {
             get { return (Visibility)GetValue(SecondsVisibilityProperty); }
@@ -202,12 +202,12 @@ namespace FamilyFinance.Shared.Controls
                         control.DaysVisibility = Visibility.Visible;
                         break;
                     case TimePickerFormat.DaysHoursMinutes:
-                        control.SecondsVisibility = Visibility.Hidden;
+                        control.SecondsVisibility = Visibility.Collapsed;
                         control.DaysVisibility = Visibility.Visible;
                         break;
                     case TimePickerFormat.HoursMinutes:
-                        control.SecondsVisibility = Visibility.Hidden;
-                        control.DaysVisibility = Visibility.Hidden;
+                        control.SecondsVisibility = Visibility.Collapsed;
+                        control.DaysVisibility = Visibility.Collapsed;
                         break;
                     default:
                         break;
