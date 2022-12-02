@@ -195,6 +195,7 @@ namespace WebApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [Authorize]
         public ActionResult<User> GetCurrentUser()
         {
             User user = HttpContext.User.CurrentUser();
