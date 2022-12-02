@@ -755,6 +755,7 @@
         <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
         <Setter Property="MinWidth" Value="25"/>
         <Setter Property="MinHeight" Value="25"/>
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
@@ -2260,4 +2261,117 @@
     </Style>
     <!--#endregion-->
 
+    <!--#region FilterTextBox -->
+    <Style x:Key="FFButtonEllipsePrimary" TargetType="Button">
+        <Setter Property="BorderBrush" Value="{StaticResource HighLightBrush}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="{StaticResource HighLightBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource HighLightTextBrush}"/>
+        <Setter Property="MinWidth" Value="25"/>
+        <Setter Property="MinHeight" Value="25"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Ellipse Name="ellipseOwner" Margin="-2" Stroke="{StaticResource HighLightBorderBrush}" StrokeThickness="0" Fill="Transparent"/>
+                        <Grid>
+                            <Ellipse Name="ellipseBorder" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Fill="{TemplateBinding Background}" StrokeThickness="0" Stroke="{TemplateBinding BorderBrush}"/>
+                            <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="ellipseBorder" Property="StrokeThickness" Value="1"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                            <Setter TargetName="ellipseOwner" Property="StrokeThickness" Value="2"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <ObjectDataProvider x:Key="FilterTypes" MethodName="GetValues" ObjectType="{x:Type controls:FilterTypes}">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type TypeName="controls:FilterTypes"/>
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+
+    <conv:DisplayNameConverter x:Key="displayNameConverter"/>
+
+    <Style x:Key="FFFilterTextBox" TargetType="{x:Type controls:FilterTextBox}">
+        <Setter Property="Height" Value="34"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <controls:WatermarkTextBox x:Name="PART_TextBox"
+                                                   FontWeight="Normal"
+                                                   Watermark="Поиск..." 
+                                                   Grid.Column="0" 
+                                                   Style="{StaticResource FFWatermarkTextBox}"/>
+                        <Button x:Name="PART_Button" Margin="6 0 0 0" Grid.Column="1" ToolTip="Фильтр" Content="&#xe94c;" FontFamily="{StaticResource PrimeIcons}" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource FFButtonEllipsePrimary}"/>
+                        <Button x:Name="PART_ButtonResetFilter" Margin="6 0 0 0" Grid.Column="2" ToolTip="Очистить фильтр" Content="&#xe9b7;" FontFamily="{StaticResource PrimeIcons}" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource FFButtonEllipse}"/>
+
+                        <Popup
+                            x:Name="PART_Popup"
+                            PlacementTarget="{Binding ElementName=PART_Button}"
+                            Placement="Bottom"
+                            IsOpen="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsDropDownOpen}"
+                            AllowsTransparency="True" 
+                            Focusable="False" 
+                            PopupAnimation="Slide"
+                            StaysOpen="False">
+                            <Grid Name="DropDown" Margin="10"
+                                    SnapsToDevicePixels="True"                
+                                    Width="175">
+                                <Border Background="White"
+                                    x:Name="DropDownBorder"
+                                    CornerRadius="5"
+                                    BorderThickness="0"
+                                    Padding="0 5">
+                                    <Border.Effect>
+                                        <DropShadowEffect Color="Black" ShadowDepth="2" Opacity="0.1" Direction="270" BlurRadius="10"/>
+                                    </Border.Effect>
+
+                                    <ScrollViewer Margin="0 2 0 0" SnapsToDevicePixels="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                        <Grid>
+                                            <ListBox x:Name="PART_ListBox"
+                                                     Background="Transparent"
+                                                     BorderThickness="0" 
+                                                     ItemsSource="{Binding Source={StaticResource FilterTypes}}" Style="{StaticResource FFListBox}"
+                                                     SelectedItem="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FilterType}">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Path=., Converter={StaticResource displayNameConverter}}"/>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </Grid>
+                                    </ScrollViewer>
+                                </Border>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=PART_TextBox, Path=Text}" Value="">
+                            <Setter TargetName="PART_ButtonResetFilter" Property="Visibility" Value="Hidden"/>
+                            <Setter TargetName="PART_Button" Property="Style" Value="{StaticResource FFButtonEllipse}"/>
+                      </DataTrigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion-->
+    
 </ResourceDictionary>
