@@ -33,74 +33,74 @@ namespace FamilyFinance.View.MainView
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
-        {
-            string text = null;
+        //private async void Button_Click(object sender, RoutedEventArgs e)
+        //{
+        //    string text = null;
 
-            Func<Client, Task> manipulatonDataMethod = async (client) =>
-            {
-                var result = await client.ApiAccountGetTextAsync();
+        //    Func<Client, Task> manipulatonDataMethod = async (client) =>
+        //    {
+        //        var result = await client.ApiAccountGetTextAsync();
 
-                if (!string.IsNullOrEmpty(result.Value))
-                {
-                    text = result.Value;
-                }
-            };
+        //        if (!string.IsNullOrEmpty(result.Value))
+        //        {
+        //            text = result.Value;
+        //        }
+        //    };
 
-            var res = await ClientManager.ManipulatonData(manipulatonDataMethod);
+        //    var res = await ClientManager.ManipulatonData(manipulatonDataMethod);
 
-            txBox.Text = text;
-        }
+        //    txBox.Text = text;
+        //}
 
-        private async void Button_Click_Admin(object sender, RoutedEventArgs e)
-        {
-            string text = null;
+        //private async void Button_Click_Admin(object sender, RoutedEventArgs e)
+        //{
+        //    string text = null;
 
-            Func<Client, Task> manipulatonDataMethod = async (client) =>
-            {
-                var result = await client.ApiAccountGetAdminRoleAsync();
+        //    Func<Client, Task> manipulatonDataMethod = async (client) =>
+        //    {
+        //        var result = await client.ApiAccountGetAdminRoleAsync();
 
-                if (!string.IsNullOrEmpty(result.Value))
-                {
-                    text = result.Value;
-                }
-            };
+        //        if (!string.IsNullOrEmpty(result.Value))
+        //        {
+        //            text = result.Value;
+        //        }
+        //    };
 
-            var res = await ClientManager.ManipulatonData(manipulatonDataMethod);
+        //    var res = await ClientManager.ManipulatonData(manipulatonDataMethod);
 
-            txBoxAdminRole.Text = text;
-        }
+        //    txBoxAdminRole.Text = text;
+        //}
 
-        private async void Button_Click_User(object sender, RoutedEventArgs e)
-        {
-            string text = null;
+        //private async void Button_Click_User(object sender, RoutedEventArgs e)
+        //{
+        //    string text = null;
 
-            Func<Client, Task> manipulatonDataMethod = async (client) =>
-            {
-                var result = await client.ApiAccountGetUserRoleAsync();
+        //    Func<Client, Task> manipulatonDataMethod = async (client) =>
+        //    {
+        //        var result = await client.ApiAccountGetUserRoleAsync();
 
-                if (!string.IsNullOrEmpty(result.Value))
-                {
-                    text = result.Value;
-                }
-            };
+        //        if (!string.IsNullOrEmpty(result.Value))
+        //        {
+        //            text = result.Value;
+        //        }
+        //    };
 
-            var res = await ClientManager.ManipulatonData(manipulatonDataMethod);
+        //    var res = await ClientManager.ManipulatonData(manipulatonDataMethod);
 
-            txBoxUserRole.Text = text;
-        }
+        //    txBoxUserRole.Text = text;
+        //}
 
     
 
-        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            Func<Client, Task> manipulatonDataMethod = async (client) =>
-            {
-                var result = await client.ApiCurrencyGetAllAsync();
-                RatesList = new ObservableCollection<CurrencyRate>(result);
-            };
+        //private async void UserControl_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    Func<Client, Task> manipulatonDataMethod = async (client) =>
+        //    {
+        //        var result = await client.ApiCurrencyGetAllAsync();
+        //        RatesList = new ObservableCollection<CurrencyRate>(result);
+        //    };
 
-            var res = await ClientManager.ManipulatonData(manipulatonDataMethod);
-        }
+        //    var res = await ClientManager.ManipulatonData(manipulatonDataMethod);
+        //}
     }
 }

@@ -4,15 +4,23 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FamilyFinance.View.MainView"
+             xmlns:controls="clr-namespace:FamilyFinance.Shared.Controls"
              DataContext="{Binding RelativeSource={RelativeSource Self}}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded">
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/FamilyFinance;component/FFResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0">
+        <!--<StackPanel Grid.Column="0">
             <GroupBox>
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
@@ -38,12 +46,32 @@
             <TextBlock Margin="0 15 0 0" Text="User role test!"/>
             <TextBox x:Name="txBoxUserRole" Margin="10"/>
             <Button Content="проверка апи роли User" Click="Button_Click_User"/>
-        </StackPanel>
+        </StackPanel>-->
 
-        <Grid Grid.Column="1">
-            <DataGrid ItemsSource="{Binding RatesList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
-                
-            </DataGrid>
+        <Grid Grid.Column="1" Background="White">
+            <!--<DataGrid ItemsSource="{Binding RatesList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+            </DataGrid>-->
+
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition />
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Margin="0 15" Grid.Row="0">
+                <controls:WatermarkTextBox Watermark="Введите текст..." Width="200" Height="34" Style="{StaticResource FFWatermarkTextBox}"/>
+                <controls:WatermarkTextBox Margin="0 15" Watermark="Введите текст..." Width="200" Height="34" Grid.Row="0" Style="{StaticResource FFWatermarkTextBox}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Margin="25">
+                <controls:TimePicker Width="200" Style="{StaticResource FFTimePickerStyle}"/>
+            </StackPanel>
+
+            <Grid Grid.Row="2" Background="White">
+                <!--<controls:FilterTextBox Width="250" Margin="25" VerticalAlignment="Center" Style="{StaticResource FFFilterTextBox}"/>-->
+                <controls:IntegerUpDown Height="36" Width="200" Style="{StaticResource FFNumericUpDown}" Format="%"/>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

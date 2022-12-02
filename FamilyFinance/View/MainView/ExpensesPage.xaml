@@ -66,6 +66,7 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <controls:FFButton Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Добавить" Height="34" Margin="0,0,40,0" Command="{Binding AddExpenseCommand}"/>
@@ -147,7 +148,8 @@
                             </DatePicker>
                         </Grid>
 
-                        <controls:FFButton Grid.Column="3" Icon="None" Content="Обновить" HorizontalAlignment="Left" Command="{Binding UpdateDataCommand}" Style="{StaticResource FFButton}"/>
+                        <controls:FFButton Grid.Column="3" Icon="None" Content="Обновить" Command="{Binding UpdateDataCommand}" Style="{StaticResource FFButton}"/>
+                        <controls:FilterTextBox Margin="20 0" HorizontalAlignment="Left" Grid.Column="4" Width="200" Source="{Binding ElementName=DGExpenses, Path=Items}" PropertyPath="CategoryExpense.Name" Style="{StaticResource FFFilterTextBox}"/>
                     </Grid>
                 </Grid>
 
@@ -161,7 +163,7 @@
                             <RowDefinition/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <DataGrid AutoGenerateColumns="False" HorizontalScrollBarVisibility="Auto"
+                        <DataGrid x:Name="DGExpenses" AutoGenerateColumns="False" HorizontalScrollBarVisibility="Auto"
                               IsReadOnly="True" HorizontalAlignment="Left"
                               ItemsSource="{Binding Expenses}" 
                               CanUserAddRows="False"
@@ -171,7 +173,7 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn x:Name="ColumnCategory" Header="Категория" MinWidth="150" MaxWidth="300" Binding="{Binding CategoryExpense.Name}"/>
                                 <DataGridTextColumn x:Name="ColumnSubCategory" Header="Подкатегория"  MinWidth="200" MaxWidth="350" Binding="{Binding SubCategoryExpense.Name}"/>
-                                <DataGridTextColumn x:Name="ColumnDate" Header="Дата" Width="auto" MinWidth="200" MaxWidth="350" Binding="{Binding Date}"/>
+                                <DataGridTextColumn x:Name="ColumnDate" Header="Дата" Width="auto" MinWidth="200" MaxWidth="350" Binding="{Binding Date, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}"/>
                                 <DataGridTextColumn x:Name="ColumnCheck" Header="Счет" MinWidth="200" MaxWidth="350" Binding="{Binding Check.Name}"/>
                                 <DataGridTextColumn x:Name="ColumnCurrencyStringCode" Header="Валюта" Width="auto" Binding="{Binding Check.CurrencyRate.CurrencyStringCode}"/>
                                 <DataGridTextColumn x:Name="ColumnAmount" Header="Сумма" MinWidth="150" MaxWidth="250" Width="auto" Binding="{Binding SpentMoney, StringFormat=F2}"/>
