@@ -1,0 +1,78 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:FamilyFinance.Core.Converters"
+                    xmlns:local="clr-namespace:FamilyFinance.Shared.Controls">
+    <ObjectDataProvider x:Key="FilterTypes" MethodName="GetValues" ObjectType="{x:Type local:FilterTypes}">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type TypeName="local:FilterTypes"/>
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+
+    <converters:DisplayNameConverter x:Key="displayNameConverter"/>
+    
+    
+    <Style TargetType="{x:Type local:FilterTextBox}">
+        <Setter Property="Height" Value="34"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="PART_TextBox" Grid.Column="0"/>
+                        <Button x:Name="PART_Button" Grid.Column="1" Padding="10 0 " Content="Поиск"/>
+                        <Button x:Name="PART_ButtonResetFilter" Padding="10 0" Grid.Column="2" Content="Сброс"/>
+
+                        <Popup
+                            x:Name="PART_Popup"
+                            PlacementTarget="{Binding ElementName=PART_Button}"
+                            Placement="Bottom"
+                            IsOpen="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsDropDownOpen}"
+                            AllowsTransparency="True" 
+                            Focusable="False" 
+                            PopupAnimation="Slide"
+                            StaysOpen="False">
+                            <Grid Name="DropDown" Margin="10"
+                                    SnapsToDevicePixels="True"                
+                                    Width="200">
+                                <Border Background="White"
+                                    x:Name="DropDownBorder"
+                                    CornerRadius="5"
+                                    BorderThickness="0"
+                                    Padding="0 5">
+                                    <Border.Effect>
+                                        <DropShadowEffect Color="Black" ShadowDepth="2" Opacity="0.1" Direction="270" BlurRadius="10"/>
+                                    </Border.Effect>
+
+                                    <ScrollViewer Margin="0 2 0 0" SnapsToDevicePixels="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                        <Grid>
+                                            <ListBox x:Name="PART_ListBox"
+                                                     BorderThickness="0" 
+                                                     ItemsSource="{Binding Source={StaticResource FilterTypes}}" 
+                                                     SelectedItem="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FilterType}">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Path=., Converter={StaticResource displayNameConverter}}"/>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </Grid>
+                                    </ScrollViewer>
+                                </Border>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=PART_TextBox, Path=Text}" Value="">
+                            <Setter TargetName="PART_ButtonResetFilter" Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
