@@ -7,3 +7,10 @@
 
 ![AuthForm](https://github.com/BlurTrash/FamilyFinance/assets/69421015/2bfc8594-333f-4336-abe4-ea4d3d315f89)  
 Форма авторизации (на ней использовал стили materialDisign) вдальнейшем начал писать свои стили и элементы управления  
+  
+![FFMainApp](https://github.com/BlurTrash/FamilyFinance/assets/69421015/a1df895b-1952-4415-9183-71593c61d36b)  
+![Reports](https://github.com/BlurTrash/FamilyFinance/assets/69421015/2ea855b0-296c-4b96-b8d8-a1f9b0917932)
+Само приложение  
+  
+Для приложения писал свои стили, и несколько своих элементов управления таких.  
+На серверной части использовались технологии EntityFramework, Swagger, ASP.Net, MS Sql server
