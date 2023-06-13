@@ -76,6 +76,14 @@ namespace WebApi
                 app.UseStaticFiles();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"));
+
+                //тест для запросов с других портов локально
+                app.UseCors(x => x
+                   .AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader());
+
+                app.UseHttpsRedirection();
             }
 
             //app.UseHttpsRedirection();
